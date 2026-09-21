@@ -1,0 +1,99 @@
+{
+  "form": {
+    "titleCreate": "Nouvelle dépense",
+    "close": "Fermer",
+    "amount": {
+      "label": "Montant",
+      "placeholder": "0"
+    },
+    "category": {
+      "label": "Catégorie"
+    },
+    "subcategory": {
+      "label": "Sous-catégorie"
+    },
+    "summary": {
+      "withSubcategory": "{{category}} › {{subcategory}}",
+      "categoryOnly": "{{category}}"
+    },
+    "date": {
+      "label": "Date",
+      "today": "Aujourd'hui",
+      "yesterday": "Hier",
+      "other": "Autre date",
+      "input": "Choisir une date"
+    },
+    "tags": {
+      "label": "Tags (optionnel)",
+      "add": "Tag",
+      "newTag": "Nouveau tag"
+    },
+    "keypad": {
+      "label": "Pavé numérique",
+      "comma": "Virgule",
+      "backspace": "Effacer"
+    },
+    "actions": {
+      "save": "Enregistrer",
+      "saveAndAddAnother": "Enregistrer et en ajouter une autre",
+      "cancel": "Annuler",
+      "saveChanges": "Enregistrer les modifications",
+      "delete": "Supprimer cette dépense"
+    },
+    "saved": "Dépense enregistrée : {{amount}}",
+    "errors": {
+      "amount": "Saisis un montant supérieur à 0",
+      "category": "Choisis une catégorie",
+      "date": "Saisis une date valide",
+      "save": "La dépense n'a pas pu être enregistrée. Vérifie les champs et réessaie."
+    },
+    "titleEdit": "Modifier la dépense"
+  },
+  "row": {
+    "meta": "{{category}} · {{day}}"
+  },
+  "toast": {
+    "deleted": "Dépense supprimée",
+    "undo": "Annuler",
+    "dismiss": "Fermer",
+    "region": "Notifications"
+  },
+  "history": {
+    "title": "Historique",
+    "total": "{{amount}} au total",
+    "count_one": "{{count}} dépense",
+    "count_other": "{{count}} dépenses",
+    "search": {
+      "label": "Rechercher une dépense",
+      "placeholder": "Rechercher : viande, uber, #avec-amis…"
+    },
+    "filters": {
+      "month": "Mois",
+      "category": "Catégorie",
+      "tag": "Tag",
+      "clear": "Effacer les filtres",
+      "group": "Filtres"
+    },
+    "columns": {
+      "date": "Date",
+      "expense": "Dépense",
+      "tag": "Tag",
+      "amount": "Montant"
+    },
+    "row": {
+      "edit": "Modifier la dépense :",
+      "swipeEdit": "Modifier",
+      "swipeDelete": "Supprimer"
+    },
+    "loadMore": "Charger les dépenses précédentes",
+    "empty": {
+      "title": "Aucune dépense en {{month}}",
+      "text": "Ajoute une dépense avec le bouton +."
+    },
+    "noResults": {
+      "title": "Aucun résultat",
+      "text": "Essaie d'autres mots, ou retire un filtre."
+    },
+    "newExpense": "Nouvelle dépense"
+  }
+}

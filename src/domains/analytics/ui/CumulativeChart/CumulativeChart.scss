@@ -1,0 +1,83 @@
+@use '@/shared/styles/abstracts' as *;
+
+.cumulative-chart {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  margin: 0;
+
+  &__legend {
+    display: flex;
+    gap: space(4);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  // Petit trait devant chaque libellé : plein pour le réel, pointillé pour la projection.
+  &__key {
+    display: inline-flex;
+    align-items: center;
+    gap: space(2);
+
+    &::before {
+      content: '';
+      width: 18px;
+      border-top: 3px solid var(--color-accent);
+    }
+
+    &--projection::before {
+      border-top-style: dotted;
+    }
+  }
+
+  &__svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  &__grid {
+    stroke: var(--color-border);
+    stroke-width: 1;
+  }
+
+  &__tick {
+    fill: var(--color-text-muted);
+    font-size: 10px;
+  }
+
+  &__area {
+    fill: var(--color-accent-soft);
+  }
+
+  &__line,
+  &__projection {
+    fill: none;
+    stroke: var(--color-accent);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+  }
+
+  &__projection {
+    stroke-dasharray: 1 6;
+    stroke-width: 3;
+  }
+
+  &__dot {
+    fill: var(--color-accent);
+    stroke: var(--color-surface);
+    stroke-width: 2;
+  }
+
+  &__label {
+    fill: var(--color-ink);
+    font-size: 10px;
+    font-weight: 700;
+
+    &--projected {
+      fill: var(--color-accent);
+    }
+  }
+}

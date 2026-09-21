@@ -1,0 +1,47 @@
+{
+  "dashboard": {
+    "stayEyebrow": "Lisbonne · Jour {{day}} sur {{total}}",
+    "spentIn": "Dépensé en {{month}}",
+    "spentThisMonth": "Dépensé ce mois",
+    "dayOfMonth": "Jour {{day}} sur {{total}}",
+    "dailyAverage": "Moyenne par jour",
+    "excludingHousing": "hors logement",
+    "monthEnd": "Fin de mois",
+    "projectionLong": "Projection fin de mois",
+    "remainingDays_one": "{{count}} jour restant",
+    "remainingDays_other": "{{count}} jours restants",
+    "monthOver": "Mois terminé",
+    "sinceStart": "Depuis le début du séjour",
+    "stayElapsed": "{{percent}} % du séjour écoulé",
+    "previousMonth": "Mois précédent",
+    "nextMonth": "Mois suivant",
+    "newExpense": "Nouvelle dépense"
+  },
+  "stay": {
+    "title": "Séjour Erasmus",
+    "day": "J{{day}} / {{total}}",
+    "range": "{{start}} → {{end}}"
+  },
+  "breakdown": {
+    "title": "Où part l'argent",
+    "excludingFixed": "hors loyer",
+    "others": "Autres",
+    "ariaLabel": "Répartition des dépenses du mois par catégorie"
+  },
+  "rhythm": {
+    "title": "Rythme du mois",
+    "subtitle": "Cumul hors logement, avec projection",
+    "actual": "Réel",
+    "projection": "Projection",
+    "today": "Aujourd'hui · {{amount}}",
+    "projectedEnd": "≈ {{amount}}",
+    "ariaLabelWithProjection": "Cumul des dépenses hors logement : {{amount}} au jour {{day}}, projeté à {{projected}} en fin de mois",
+    "ariaLabelFinal": "Cumul des dépenses hors logement : {{amount}} sur le mois"
+  },
+  "recent": {
+    "title": "Dernières dépenses",
+    "history": "Historique",
+    "emptyTitle": "Aucune dépense ce mois-ci",
+    "emptyText": "Ajoute ta première dépense avec le bouton +."
+  }
+}

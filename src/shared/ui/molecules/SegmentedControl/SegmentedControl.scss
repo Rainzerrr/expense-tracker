@@ -1,0 +1,44 @@
+@use '@/shared/styles/abstracts' as *;
+
+.segmented-control {
+  display: flex;
+  padding: space(1);
+  border-radius: var(--radius-sm);
+  background: var(--color-ground);
+
+  &__option {
+    display: flex;
+    flex: 1;
+    position: relative;
+  }
+
+  &__input {
+    @include visually-hidden;
+  }
+
+  &__face {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding-inline: space(2);
+    border-radius: 10px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  &__input:checked + &__face {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-card);
+  }
+
+  &__input:focus-visible + &__face {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

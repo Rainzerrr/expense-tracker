@@ -1,0 +1,18 @@
+@use 'sass:map';
+
+$breakpoints: (
+  'sm': 480px,
+  // grand téléphone
+  'md': 768px,
+  // tablette
+  'lg': 1024px,
+  // ordinateur portable : la barre latérale remplace la barre du bas
+  'xl': 1280px, // grand écran
+);
+
+// Seul moyen d'écrire une media query de largeur (mobile first : min-width uniquement).
+@mixin up($key) {
+  @media (min-width: map.get($breakpoints, $key)) {
+    @content;
+  }
+}

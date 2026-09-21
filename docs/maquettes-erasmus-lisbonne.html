@@ -1,0 +1,1900 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquettes : suivi de dépenses Erasmus à Lisbonne</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  --page: #ECEAE4;
+  --ink: #1D1B2E;
+  --muted: #5F5C74;
+  --accent: #5B4BDB;
+  --line: #D9D6E2;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--page); color: var(--ink); font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* En-tête de page (mobile first) */
+.topbar { position: sticky; top: 0; z-index: 10; background: rgb(236 234 228 / 92%); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.topbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; max-width: 1440px; margin: 0 auto; }
+.topbar__brand { font-family: 'Bricolage Grotesque', 'DM Sans', sans-serif; font-weight: 700; font-size: 17px; }
+.topbar__nav { display: flex; gap: 4px; }
+.topbar__link { display: flex; align-items: center; min-height: 44px; padding: 0 14px; border-radius: 999px; font-size: 15px; font-weight: 600; }
+.topbar__link:hover { background: #fff; }
+
+.page { max-width: 1440px; margin: 0 auto; padding: 0 16px 64px; }
+.intro { padding: 32px 0 8px; max-width: 720px; }
+.intro__title { margin: 0 0 12px; font-family: 'Bricolage Grotesque', 'DM Sans', sans-serif; font-size: clamp(30px, 6vw, 48px); line-height: 1.05; letter-spacing: -0.02em; }
+.intro__text { margin: 0 0 8px; font-size: 17px; color: var(--muted); }
+
+.part { padding-top: 40px; scroll-margin-top: 64px; }
+.part__title { margin: 0 0 6px; font-family: 'Bricolage Grotesque', 'DM Sans', sans-serif; font-size: 28px; letter-spacing: -0.01em; }
+.part__text { margin: 0 0 24px; max-width: 640px; color: var(--muted); }
+
+/* Écrans iPhone : rangée défilante, puis grille sur grand écran */
+.row { display: flex; align-items: flex-start; gap: 28px; overflow-x: auto; padding: 4px 4px 28px; scroll-snap-type: x proximity; }
+.board { scroll-margin-top: 72px; }
+.board--mobile { flex: none; scroll-snap-align: start; }
+.board__title { margin: 0 0 10px; font-size: 16px; font-weight: 700; }
+.board__frame { position: relative; overflow: hidden; border-radius: 28px; background: #F6F5F1; box-shadow: 0 0 0 1px rgb(29 27 46 / 8%), 0 18px 40px rgb(29 27 46 / 14%); transform-origin: top left; }
+.board:target .board__frame { box-shadow: 0 0 0 4px var(--accent), 0 18px 40px rgb(29 27 46 / 14%); }
+
+/* Écrans Mac : mis à l'échelle pour tenir dans la largeur */
+.stack { display: flex; flex-direction: column; gap: 40px; }
+.board__viewport { width: 100%; max-width: 1360px; }
+
+/* Tokens */
+.swatches { list-style: none; margin: 0 0 24px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.swatch { display: flex; flex-direction: column; gap: 4px; padding: 12px; background: #fff; border-radius: 16px; }
+.swatch__chip { display: block; height: 44px; border-radius: 10px; background: var(--swatch); box-shadow: inset 0 0 0 1px rgb(29 27 46 / 10%); }
+.swatch__name { font-size: 14px; font-weight: 600; }
+.swatch__hex { font-size: 13px; color: var(--muted); }
+.specimen { display: grid; gap: 12px; margin-bottom: 24px; }
+.specimen__card { padding: 20px; background: #fff; border-radius: 20px; }
+.specimen__display { font-family: 'Bricolage Grotesque', 'DM Sans', sans-serif; font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+.specimen__body { font-size: 17px; }
+.specimen__note { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+
+@media (min-width: 768px) {
+  .page { padding-inline: 32px; }
+  .topbar__inner { padding-inline: 32px; }
+  .swatches { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .specimen { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1280px) {
+  .row { flex-wrap: wrap; overflow: visible; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+@media print {
+  .topbar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <span class="topbar__brand">Lisboa</span>
+    <nav class="topbar__nav" aria-label="Sections">
+      <a class="topbar__link" href="#iphone">iPhone</a>
+      <a class="topbar__link" href="#mac">Mac</a>
+      <a class="topbar__link" href="#tokens">Tokens</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="intro">
+    <h1 class="intro__title">Suivi de dépenses Erasmus à Lisbonne</h1>
+    <p class="intro__text">Maquettes de l'application : une PWA sur iPhone et un site web sur Mac, avec les mêmes données.</p>
+    <p class="intro__text">Le design est pensé <strong>mobile first</strong> : les écrans iPhone sont la référence, les écrans Mac en sont l'adaptation. Les boutons et les menus sont cliquables d'un écran à l'autre. Tous les chiffres sont des données d'exemple.</p>
+  </div>
+
+  <section class="part" id="iphone">
+    <h2 class="part__title">iPhone</h2>
+    <p class="part__text">Écrans de référence, à 390 px de large. Touche le bouton « + » du dashboard pour ouvrir la saisie, une dépense de l'historique pour la modifier.</p>
+    <div class="row">
+      <section class="board board--mobile" id="m-dashboard" aria-label="Dashboard">
+        <h3 class="board__title">Dashboard</h3>
+        <div class="board__frame" style="width:390px;height:1720px"><div style="width:390px;height:1720px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:16px;padding-top:24px;">
+
+  <!-- En-tête -->
+  <div style="padding:0 20px;display:flex;flex-direction:column;gap:8px;">
+    <div style="font-size:13px;font-weight:600;color:#6B6880;">Lisbonne · Jour 20 sur 153</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:30px;font-weight:700;letter-spacing:-0.02em;">Septembre 2026</h3>
+      <div style="display:flex;gap:8px;">
+        <button aria-label="Mois précédent" style="width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button aria-label="Mois suivant" style="width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);opacity:0.5;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carte principale -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="font-size:14px;font-weight:500;color:#6B6880;">Dépensé en septembre</div>
+      <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:52px;font-weight:700;letter-spacing:-0.03em;line-height:1.05;">970,00&nbsp;€</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;">
+      <div style="background:#F1EEFF;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:13px;font-weight:500;color:#5B5675;">Moyenne par jour</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">27,50&nbsp;€</div>
+        <div style="font-size:12px;color:#5B5675;">hors logement</div>
+      </div>
+      <div style="background:#E4F6EE;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:13px;font-weight:500;color:#2F6B54;">Fin de mois</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">≈&nbsp;1&nbsp;245&nbsp;€</div>
+        <div style="font-size:12px;color:#2F6B54;">10 jours restants</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:500;color:#6B6880;">
+        <span>Séjour Erasmus</span><span>1 sept. → 31 janv.</span>
+      </div>
+      <div style="height:8px;border-radius:8px;background:#ECEAF3;">
+        <div style="width:13%;height:8px;border-radius:8px;background:#5B4BDB;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Répartition -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px 20px 22px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Où part l'argent</h4>
+      <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Tout voir</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div style="position:relative;width:128px;height:128px;flex:none;">
+        <svg width="128" height="128" viewBox="0 0 140 140" role="img" aria-label="Répartition des dépenses : logement 43 %, courses 17 %, activités 15 %, voyages 9 %, transport 6 %, autres 10 %">
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#8B7CF6" stroke-width="16" stroke-dasharray="144.41 194.88" stroke-dashoffset="0.00" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#19A974" stroke-width="16" stroke-dasharray="56.26 283.03" stroke-dashoffset="-146.91" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#F59E42" stroke-width="16" stroke-dasharray="47.17 292.12" stroke-dashoffset="-205.67" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#EC6B9A" stroke-width="16" stroke-dasharray="27.23 312.06" stroke-dashoffset="-255.34" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#3B9EEB" stroke-width="16" stroke-dasharray="18.84 320.46" stroke-dashoffset="-285.08" transform="rotate(-90 70 70)"/>
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#A3A1B5" stroke-width="16" stroke-dasharray="30.38 308.91" stroke-dashoffset="-306.41" transform="rotate(-90 70 70)"/>
+        </svg>
+        <div style="position:absolute;left:0;top:0;width:128px;height:128px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="font-size:12px;color:#6B6880;">hors loyer</div>
+          <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">550&nbsp;€</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:9px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#8B7CF6;flex:none;"></span><span style="flex:1;">Logement</span><span style="font-weight:700;">420&nbsp;€</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span><span style="flex:1;">Courses</span><span style="font-weight:700;">168&nbsp;€</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span><span style="flex:1;">Activités</span><span style="font-weight:700;">142&nbsp;€</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#EC6B9A;flex:none;"></span><span style="flex:1;">Voyages</span><span style="font-weight:700;">85&nbsp;€</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span><span style="flex:1;">Transport</span><span style="font-weight:700;">61&nbsp;€</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#A3A1B5;flex:none;"></span><span style="flex:1;">Autres</span><span style="font-weight:700;">94&nbsp;€</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rythme du mois -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Rythme du mois</h4>
+      <div style="font-size:13px;color:#6B6880;">Cumul hors logement, avec projection</div>
+    </div>
+    <svg width="326" height="170" viewBox="0 0 326 170" role="img" aria-label="Courbe cumulée des dépenses hors logement : environ 550 euros au 20 septembre, projection à environ 825 euros au 30">
+      <g stroke="#ECEAF3" stroke-width="1">
+        <line x1="34" y1="146" x2="318" y2="146"/>
+        <line x1="34" y1="100.7" x2="318" y2="100.7"/>
+        <line x1="34" y1="55.3" x2="318" y2="55.3"/>
+        <line x1="34" y1="10" x2="318" y2="10"/>
+      </g>
+      <g font-size="11" fill="#6B6880" text-anchor="end" font-family="DM Sans, sans-serif">
+        <text x="28" y="150">0</text><text x="28" y="104.7">300</text><text x="28" y="59.3">600</text><text x="28" y="14">900</text>
+      </g>
+      <path d="M34.0 140.7 L43.8 138.9 L53.6 134.7 L63.4 133.3 L73.2 127.1 L83.0 123.8 L92.8 121.5 L102.6 117.0 L112.3 115.8 L122.1 111.8 L131.9 109.0 L141.7 102.2 L151.5 94.3 L161.3 90.7 L171.1 89.0 L180.9 84.0 L190.7 80.0 L200.5 77.8 L210.3 72.1 L220.1 62.9 L220.1 146.0 L34.0 146.0 Z" fill="#5B4BDB" fill-opacity="0.10"/>
+      <path d="M34.0 140.7 L43.8 138.9 L53.6 134.7 L63.4 133.3 L73.2 127.1 L83.0 123.8 L92.8 121.5 L102.6 117.0 L112.3 115.8 L122.1 111.8 L131.9 109.0 L141.7 102.2 L151.5 94.3 L161.3 90.7 L171.1 89.0 L180.9 84.0 L190.7 80.0 L200.5 77.8 L210.3 72.1 L220.1 62.9" fill="none" stroke="#5B4BDB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M220.1 62.9 L318.0 21.3" fill="none" stroke="#5B4BDB" stroke-width="2.5" stroke-dasharray="2 6" stroke-linecap="round"/>
+      <circle cx="220.1" cy="62.9" r="5.5" fill="#5B4BDB" stroke="#FFFFFF" stroke-width="2.5"/>
+      <text x="316" y="44" font-size="12" font-weight="700" fill="#1D1B2E" text-anchor="end" font-family="DM Sans, sans-serif">≈ 825 €</text>
+      <g font-size="11" fill="#6B6880" text-anchor="middle" font-family="DM Sans, sans-serif">
+        <text x="34" y="164">1</text><text x="122.1" y="164">10</text><text x="220.1" y="164">20</text><text x="318" y="164">30</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Focus épinglés -->
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="padding:0 20px;display:flex;justify-content:space-between;align-items:baseline;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Mes focus</h4>
+      <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Gérer</span>
+    </div>
+    <div style="margin:0 16px;display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;">
+      <a href="#m-focus" style="background:#FFFFFF;border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#0E7A54;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses › Viande</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:26px;font-weight:700;">58,00&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">≈ 20&nbsp;€ par semaine</div>
+      </a>
+      <div style="background:#FFFFFF;border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#1F6FB8;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9EEB;"></span>Transport</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:26px;font-weight:700;">61,00&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">≈ 21&nbsp;€ par semaine</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dernières dépenses -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px 20px 12px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:4px;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Dernières dépenses</h4>
+      <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Historique</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:44px;height:44px;border-radius:14px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses · Aujourd'hui</div></div>
+      <div style="font-size:15px;font-weight:700;">−12,40&nbsp;€</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:44px;height:44px;border-radius:14px;background:#F59E4226;color:#B35F08;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités · Hier</div></div>
+      <div style="font-size:15px;font-weight:700;">−18,50&nbsp;€</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:44px;height:44px;border-radius:14px;background:#3B9EEB22;color:#1F6FB8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 21v-4M16 21v-4"/></svg></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Uber / Bolt</div><div style="font-size:13px;color:#6B6880;">Transport · Hier</div></div>
+      <div style="font-size:15px;font-weight:700;">−6,20&nbsp;€</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:44px;height:44px;border-radius:14px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Fruits &amp; légumes</div><div style="font-size:13px;color:#6B6880;">Courses · 17 sept.</div></div>
+      <div style="font-size:15px;font-weight:700;">−9,30&nbsp;€</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="width:44px;height:44px;border-radius:14px;background:#EC6B9A22;color:#B8386B;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Hébergement</div><div style="font-size:13px;color:#6B6880;">Voyages · 13 sept.</div></div>
+      <div style="font-size:15px;font-weight:700;">−55,00&nbsp;€</div>
+    </div>
+  </div>
+
+  <!-- Barre de navigation -->
+  <div style="margin-top:auto;background:#FFFFFF;border-top:1px solid #ECEAF3;padding:10px 16px 26px;display:flex;align-items:center;justify-content:space-between;">
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5B4BDB;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+    </div>
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Stats
+    </div>
+    <a href="#m-saisie" aria-label="Ajouter une dépense" style="width:60px;height:60px;border-radius:50%;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;margin-top:-30px;box-shadow:0 8px 20px rgba(91,75,219,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+    </a>
+    <a href="#m-historique" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+    </a>
+    <a href="#m-reglages" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+    </a>
+  </div>
+
+</div></div>
+      </section>
+      <section class="board board--mobile" id="m-saisie" aria-label="Saisie d'une dépense">
+        <h3 class="board__title">Saisie d'une dépense</h3>
+        <div class="board__frame" style="width:390px;height:844px"><div style="width:390px;height:844px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:14px;padding:20px 0 28px;">
+
+  <!-- Barre du haut -->
+  <div style="padding:0 16px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#m-dashboard" aria-label="Fermer" style="width:44px;height:44px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </a>
+    <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:18px;font-weight:700;">Nouvelle dépense</div>
+    <div style="width:44px;"></div>
+  </div>
+
+  <!-- Montant -->
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0 2px;">
+    <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:64px;font-weight:700;letter-spacing:-0.03em;line-height:1;">12,40<span style="color:#A3A1B5;">&nbsp;€</span></div>
+    <div style="display:flex;align-items:center;gap:8px;background:#19A97422;color:#0B6B49;font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses › Viande
+    </div>
+  </div>
+
+  <!-- Catégorie -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 20px;font-size:13px;font-weight:600;color:#6B6880;">Catégorie</div>
+    <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#19A97426;border:1.5px solid #19A974;font-size:15px;font-weight:600;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#F59E42;"></span>Activités</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9EEB;"></span>Transport</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#8B7CF6;"></span>Logement</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#EC6B9A;"></span>Voyages</div>
+    </div>
+  </div>
+
+  <!-- Sous-catégorie -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 20px;font-size:13px;font-weight:600;color:#6B6880;">Sous-catégorie</div>
+    <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:15px;font-weight:600;">Viande</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Poisson</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Fruits &amp; légumes</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Boulangerie</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Épicerie</div>
+    </div>
+  </div>
+
+  <!-- Date + tags -->
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#5B4BDB;color:#FFFFFF;font-size:15px;font-weight:600;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Aujourd'hui
+      </div>
+      <div style="display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Hier</div>
+      <div style="display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Autre date</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1.5px dashed #A3A1B5;color:#6B6880;font-size:14px;font-weight:600;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Tag
+      </div>
+      <div style="display:flex;align-items:center;height:36px;padding:0 14px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:14px;font-weight:600;">#avec-amis</div>
+      <div style="display:flex;align-items:center;height:36px;padding:0 14px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:14px;font-weight:600;">#petit-plaisir</div>
+    </div>
+  </div>
+
+  <!-- Clavier numérique -->
+  <div style="margin-top:auto;padding:0 16px;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:8px;">
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">1</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">2</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">3</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">4</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">5</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">6</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">7</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">8</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">9</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">,</button>
+    <button style="height:48px;border:0;border-radius:16px;background:#FFFFFF;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:600;color:#1D1B2E;">0</button>
+    <button aria-label="Effacer" style="height:48px;border:0;border-radius:16px;background:#ECEAF3;color:#1D1B2E;display:flex;align-items:center;justify-content:center;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5H9l-6 7 6 7h11a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="m13 9 4 6m0-6-4 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Enregistrer -->
+  <div style="padding:0 16px;display:flex;gap:8px;">
+    <a href="#m-dashboard" style="flex:1;height:56px;border-radius:18px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:700;box-shadow:0 8px 20px rgba(91,75,219,0.3);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Enregistrer
+    </a>
+  </div>
+
+</div></div>
+      </section>
+      <section class="board board--mobile" id="m-focus" aria-label="Focus : viande">
+        <h3 class="board__title">Focus : viande</h3>
+        <div class="board__frame" style="width:390px;height:1180px"><div style="width:390px;height:1180px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:16px;padding:20px 0 32px;">
+
+  <!-- En-tête -->
+  <div style="padding:0 16px;display:flex;align-items:center;gap:12px;">
+    <a href="#m-dashboard" aria-label="Retour au dashboard" style="width:44px;height:44px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+    <div style="display:flex;flex-direction:column;">
+      <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.01em;">Focus</div>
+      <div style="font-size:13px;color:#6B6880;">Septembre 2026</div>
+    </div>
+  </div>
+
+  <!-- Sélecteur de focus -->
+  <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+    <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:15px;font-weight:600;">Viande</div>
+    <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Transport</div>
+    <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Restaurants</div>
+    <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">#avec-amis</div>
+    <div style="flex:none;display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;border-radius:999px;border:1.5px dashed #A3A1B5;color:#6B6880;font-size:15px;font-weight:600;">+ Nouveau</div>
+  </div>
+
+  <!-- Total -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+      <div style="display:flex;align-items:center;gap:8px;background:#19A97422;color:#0B6B49;font-size:14px;font-weight:600;padding:6px 14px;border-radius:999px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses › Viande
+      </div>
+      <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:52px;font-weight:700;letter-spacing:-0.03em;line-height:1.05;">58,00&nbsp;€</div>
+      <div style="font-size:14px;color:#6B6880;">soit 6&nbsp;% de tes dépenses de septembre</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px;">
+      <div style="background:#F6F5F1;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">≈&nbsp;20&nbsp;€</div>
+        <div style="font-size:12px;color:#6B6880;">par semaine</div>
+      </div>
+      <div style="background:#F6F5F1;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">7</div>
+        <div style="font-size:12px;color:#6B6880;">achats</div>
+      </div>
+      <div style="background:#F6F5F1;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">8,29&nbsp;€</div>
+        <div style="font-size:12px;color:#6B6880;">panier moyen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Par semaine -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Semaine par semaine</h4>
+    <div style="display:flex;align-items:flex-end;justify-content:space-around;height:180px;padding:0 8px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:72px;">
+        <div style="font-size:14px;font-weight:700;">18&nbsp;€</div>
+        <div style="width:56px;height:90px;border-radius:14px;background:#19A974;"></div>
+        <div style="font-size:12px;color:#6B6880;">1–7 sept.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:72px;">
+        <div style="font-size:14px;font-weight:700;">24&nbsp;€</div>
+        <div style="width:56px;height:120px;border-radius:14px;background:#19A974;"></div>
+        <div style="font-size:12px;color:#6B6880;">8–14 sept.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:72px;">
+        <div style="font-size:14px;font-weight:700;">16&nbsp;€</div>
+        <div style="width:56px;height:80px;border-radius:14px;background:#19A97455;border:2px dashed #19A974;box-sizing:border-box;"></div>
+        <div style="font-size:12px;color:#6B6880;">15–21, en cours</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Place dans la catégorie -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Dans tes courses</h4>
+      <div style="font-size:13px;color:#6B6880;">168&nbsp;€ au total ce mois-ci</div>
+    </div>
+    <div style="display:flex;gap:3px;height:20px;">
+      <div style="flex:58 1 0;border-radius:8px;background:#19A974;"></div>
+      <div style="flex:12 1 0;border-radius:8px;background:#19A97440;"></div>
+      <div style="flex:34 1 0;border-radius:8px;background:#19A97440;"></div>
+      <div style="flex:14 1 0;border-radius:8px;background:#19A97440;"></div>
+      <div style="flex:32 1 0;border-radius:8px;background:#19A97440;"></div>
+      <div style="flex:18 1 0;border-radius:8px;background:#19A97440;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:14px;">
+      <div style="display:flex;align-items:center;gap:8px;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;"></span><span>Viande <b>58&nbsp;€</b> (35&nbsp;%)</span></div>
+      <div style="display:flex;align-items:center;gap:8px;color:#6B6880;"><span style="width:10px;height:10px;border-radius:50%;background:#19A97455;"></span><span>Le reste 110&nbsp;€</span></div>
+    </div>
+  </div>
+
+  <!-- Entrées -->
+  <div style="margin:0 16px;background:#FFFFFF;border-radius:28px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+    <h4 style="margin:0 0 4px;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Dernières entrées</h4>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Aujourd'hui</div><div style="font-size:13px;color:#6B6880;">dim. 20 sept.</div></div>
+      <div style="font-size:15px;font-weight:700;">−12,40&nbsp;€</div>
+    </div>
+    <div style="height:1px;background:#ECEAF3;"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Mercredi</div><div style="font-size:13px;color:#6B6880;">mer. 16 sept.</div></div>
+      <div style="font-size:15px;font-weight:700;">−8,60&nbsp;€</div>
+    </div>
+    <div style="height:1px;background:#ECEAF3;"></div>
+    <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+      <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Dimanche</div><div style="font-size:13px;color:#6B6880;">dim. 13 sept.</div></div>
+      <div style="font-size:15px;font-weight:700;">−15,20&nbsp;€</div>
+    </div>
+    <div style="padding-top:8px;font-size:14px;font-weight:600;color:#5B4BDB;">Voir les 7 entrées</div>
+  </div>
+
+</div></div>
+      </section>
+      <section class="board board--mobile" id="m-historique" aria-label="Historique">
+        <h3 class="board__title">Historique</h3>
+        <div class="board__frame" style="width:390px;height:1260px"><div style="position:relative;width:390px;height:1260px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:16px;padding-top:24px;">
+
+  <!-- En-tête -->
+  <div style="padding:0 20px;display:flex;align-items:flex-end;justify-content:space-between;">
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div style="font-size:13px;font-weight:600;color:#6B6880;">Septembre 2026</div>
+      <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:30px;font-weight:700;letter-spacing:-0.02em;">Historique</h3>
+    </div>
+    <div style="font-size:14px;font-weight:600;color:#6B6880;padding-bottom:4px;">970,00&nbsp;€ au total</div>
+  </div>
+
+  <!-- Recherche -->
+  <div style="padding:0 16px;">
+    <label style="display:flex;align-items:center;gap:10px;height:48px;padding:0 16px;border-radius:16px;background:#FFFFFF;box-shadow:0 1px 2px rgba(29,27,46,0.06);color:#6B6880;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" aria-label="Rechercher une dépense" placeholder="Rechercher : viande, uber, #avec-amis…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:15px;color:#1D1B2E;">
+    </label>
+  </div>
+
+  <!-- Filtres -->
+  <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+    <div style="flex:none;display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:14px;font-weight:600;">Septembre<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div style="flex:none;display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:14px;font-weight:500;">Catégorie<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div style="flex:none;display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:14px;font-weight:500;">Tag<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div style="flex:none;display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:14px;font-weight:500;">Montant<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+  </div>
+
+  <!-- Dimanche 20 -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>Aujourd'hui · dim. 20 sept.</span><span>12,40&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <a href="#m-modifier" style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses</div></div>
+        <div style="font-size:15px;font-weight:700;">−12,40&nbsp;€</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Samedi 19 -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>Hier · sam. 19 sept.</span><span>24,70&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;overflow:hidden;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#F59E4226;color:#B35F08;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités · <span style="color:#4A3FB5;font-weight:600;">#avec-amis</span></div></div>
+        <div style="font-size:15px;font-weight:700;">−18,50&nbsp;€</div>
+      </div>
+      <div style="height:1px;background:#ECEAF3;"></div>
+      <!-- Ligne glissée : actions visibles -->
+      <div style="margin:0 -16px;overflow:hidden;display:flex;">
+        <div style="width:358px;flex:none;box-sizing:border-box;margin-left:-144px;padding:8px 16px;display:flex;align-items:center;gap:12px;background:#FFFFFF;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#3B9EEB22;color:#1F6FB8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 21v-4M16 21v-4"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Uber / Bolt</div><div style="font-size:13px;color:#6B6880;">Transport</div></div>
+          <div style="font-size:15px;font-weight:700;">−6,20&nbsp;€</div>
+        </div>
+        <a href="#m-modifier" aria-label="Modifier" style="width:72px;flex:none;background:#3B9EEB;color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:700;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4"/></svg>Modifier
+        </a>
+        <div aria-label="Supprimer" style="width:72px;flex:none;background:#C23F3C;color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;font-weight:700;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Supprimer
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vendredi 18 -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>ven. 18 sept.</span><span>18,20&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#F59E4226;color:#B35F08;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Bars &amp; soirées</div><div style="font-size:13px;color:#6B6880;">Activités · <span style="color:#4A3FB5;font-weight:600;">#soirée-esn</span></div></div>
+        <div style="font-size:15px;font-weight:700;">−14,00&nbsp;€</div>
+      </div>
+      <div style="height:1px;background:#ECEAF3;"></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Boulangerie</div><div style="font-size:13px;color:#6B6880;">Courses</div></div>
+        <div style="font-size:15px;font-weight:700;">−4,20&nbsp;€</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jeudi 17 + mercredi 16 -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>jeu. 17 sept.</span><span>9,30&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Fruits &amp; légumes</div><div style="font-size:13px;color:#6B6880;">Courses</div></div>
+        <div style="font-size:15px;font-weight:700;">−9,30&nbsp;€</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>mer. 16 sept.</span><span>8,60&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses</div></div>
+        <div style="font-size:15px;font-weight:700;">−8,60&nbsp;€</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimanche 13 -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#6B6880;"><span>dim. 13 sept.</span><span>70,20&nbsp;€</span></div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;padding:6px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#EC6B9A22;color:#B8386B;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Hébergement</div><div style="font-size:13px;color:#6B6880;">Voyages</div></div>
+        <div style="font-size:15px;font-weight:700;">−55,00&nbsp;€</div>
+      </div>
+      <div style="height:1px;background:#ECEAF3;"></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses</div></div>
+        <div style="font-size:15px;font-weight:700;">−15,20&nbsp;€</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;font-size:14px;font-weight:600;color:#5B4BDB;padding:4px 0;">Charger les dépenses précédentes</div>
+
+  <!-- Toast de suppression -->
+  <div style="position:absolute;left:16px;right:16px;bottom:118px;height:52px;box-sizing:border-box;padding:0 8px 0 18px;border-radius:16px;background:#1D1B2E;color:#FFFFFF;display:flex;align-items:center;justify-content:space-between;font-size:15px;font-weight:500;box-shadow:0 12px 28px rgba(29,27,46,0.3);">
+    <span>Dépense supprimée</span>
+    <span style="height:36px;padding:0 14px;display:flex;align-items:center;border-radius:12px;font-weight:700;color:#C9C2FF;">Annuler</span>
+  </div>
+
+  <!-- Barre de navigation -->
+  <div style="margin-top:auto;background:#FFFFFF;border-top:1px solid #ECEAF3;padding:10px 16px 26px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#m-dashboard" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+    </a>
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Stats
+    </div>
+    <a href="#m-saisie" aria-label="Ajouter une dépense" style="width:60px;height:60px;border-radius:50%;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;margin-top:-30px;box-shadow:0 8px 20px rgba(91,75,219,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+    </a>
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5B4BDB;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+    </div>
+    <a href="#m-reglages" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+    </a>
+  </div>
+
+</div></div>
+      </section>
+      <section class="board board--mobile" id="m-modifier" aria-label="Modifier ou supprimer">
+        <h3 class="board__title">Modifier ou supprimer</h3>
+        <div class="board__frame" style="width:390px;height:844px"><div style="width:390px;height:844px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:18px;padding:20px 0 28px;">
+
+  <div style="padding:0 16px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#m-historique" aria-label="Fermer" style="width:44px;height:44px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </a>
+    <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:18px;font-weight:700;">Modifier la dépense</div>
+    <div style="width:44px;"></div>
+  </div>
+
+  <!-- Montant -->
+  <div style="padding:0 16px;display:flex;flex-direction:column;gap:8px;">
+    <label for="m-modifier-montant" style="padding:0 4px;font-size:13px;font-weight:600;color:#6B6880;">Montant</label>
+    <div style="display:flex;align-items:center;height:84px;padding:0 22px;border-radius:24px;background:#FFFFFF;border:2px solid #5B4BDB;">
+      <input id="m-modifier-montant" type="text" inputmode="decimal" value="18,50" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:48px;font-weight:700;letter-spacing:-0.02em;color:#1D1B2E;">
+      <span style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:600;color:#A3A1B5;">€</span>
+    </div>
+  </div>
+
+  <!-- Catégorie -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 20px;font-size:13px;font-weight:600;color:#6B6880;">Catégorie</div>
+    <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#F59E4230;border:1.5px solid #F59E42;font-size:15px;font-weight:600;"><span style="width:8px;height:8px;border-radius:50%;background:#F59E42;"></span>Activités</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9EEB;"></span>Transport</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#8B7CF6;"></span>Logement</div>
+      <div style="flex:none;display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#EC6B9A;"></span>Voyages</div>
+    </div>
+  </div>
+
+  <!-- Sous-catégorie -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 20px;font-size:13px;font-weight:600;color:#6B6880;">Sous-catégorie</div>
+    <div style="display:flex;gap:8px;padding:0 16px;overflow-x:auto;">
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:15px;font-weight:600;">Restaurants</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Cafés</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Bars &amp; soirées</div>
+      <div style="flex:none;display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Excursions</div>
+    </div>
+  </div>
+
+  <!-- Date + tags -->
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 16px;">
+    <div style="font-size:13px;font-weight:600;color:#6B6880;padding:0 4px;">Date</div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <div style="display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Aujourd'hui</div>
+      <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;background:#5B4BDB;color:#FFFFFF;font-size:15px;font-weight:600;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>Hier · 19 sept.
+      </div>
+      <div style="display:flex;align-items:center;height:40px;padding:0 16px;border-radius:999px;background:#FFFFFF;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;">Autre</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:14px;font-weight:600;">#avec-amis
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:999px;border:1.5px dashed #A3A1B5;color:#6B6880;font-size:14px;font-weight:600;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Tag
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div style="margin-top:auto;padding:0 16px;display:flex;flex-direction:column;gap:10px;">
+    <a href="#m-historique" style="height:56px;border-radius:18px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:700;box-shadow:0 8px 20px rgba(91,75,219,0.3);">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>Enregistrer les modifications
+    </a>
+    <a href="#m-historique" style="height:52px;border-radius:18px;background:#FFFFFF;border:1.5px solid #EF646155;color:#B23431;display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px;font-weight:700;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Supprimer cette dépense
+    </a>
+  </div>
+
+</div></div>
+      </section>
+      <section class="board board--mobile" id="m-reglages" aria-label="Réglages">
+        <h3 class="board__title">Réglages</h3>
+        <div class="board__frame" style="width:390px;height:1290px"><div style="width:390px;height:1290px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;flex-direction:column;gap:22px;padding-top:24px;">
+
+  <div style="padding:0 20px;">
+    <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:30px;font-weight:700;letter-spacing:-0.02em;">Réglages</h3>
+  </div>
+
+  <!-- Séjour -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6880;">Séjour</div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;overflow:hidden;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;"><span style="flex:1;font-size:16px;">Arrivée à Lisbonne</span><span style="font-size:15px;color:#6B6880;">1 sept. 2026</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Fin de l'Erasmus</span><span style="font-size:15px;color:#6B6880;">31 janv. 2027</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Devise</span><span style="font-size:15px;color:#6B6880;">Euro (€)</span></div>
+    </div>
+  </div>
+
+  <!-- Synchronisation -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6880;">Synchronisation</div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;overflow:hidden;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;"></span><span style="flex:1;font-size:16px;">Synchronisé</span><span style="font-size:15px;color:#6B6880;">il y a 2 min</span></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Code secret</span><span style="font-size:15px;color:#6B6880;letter-spacing:0.08em;">••••-••••-••••</span><span style="font-size:15px;font-weight:700;color:#5B4BDB;">Afficher</span></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Ajouter un appareil</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+    </div>
+    <div style="padding:0 24px;font-size:13px;line-height:1.45;color:#6B6880;">Saisis ce code une fois sur chaque appareil pour retrouver tes dépenses. Garde-le en lieu sûr : sans lui, impossible de rouvrir tes données sur un nouvel appareil.</div>
+  </div>
+
+  <!-- Organisation -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6880;">Organisation</div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;overflow:hidden;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;"><span style="flex:1;font-size:16px;">Catégories et sous-catégories</span><span style="font-size:15px;color:#6B6880;">9 · 44</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Focus épinglés</span><span style="font-size:15px;color:#6B6880;">3</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;"><span style="flex:1;font-size:16px;">Tags</span><span style="font-size:15px;color:#6B6880;">5</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A3A1B5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></div>
+    </div>
+  </div>
+
+  <!-- Données -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6880;">Mes données</div>
+    <div style="margin:0 16px;background:#FFFFFF;border-radius:24px;overflow:hidden;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;color:#1D1B2E;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span style="flex:1;font-size:16px;">Exporter en CSV</span></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;color:#1D1B2E;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span style="flex:1;font-size:16px;">Sauvegarde complète (JSON)</span></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;color:#1D1B2E;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5M7 9l5-5 5 5M5 20h14"/></svg><span style="flex:1;font-size:16px;">Importer une sauvegarde</span></div>
+      <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:0 18px;border-top:1px solid #ECEAF3;color:#B23431;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span style="flex:1;font-size:16px;font-weight:600;">Effacer toutes les données</span></div>
+    </div>
+  </div>
+
+  <!-- Apparence -->
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <div style="padding:0 24px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6880;">Apparence</div>
+    <div style="margin:0 16px;background:#ECEAF3;border-radius:16px;padding:4px;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:4px;">
+      <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:500;color:#4A4760;">Auto</div>
+      <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#FFFFFF;font-size:15px;font-weight:700;box-shadow:0 1px 3px rgba(29,27,46,0.12);">Clair</div>
+      <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:500;color:#4A4760;">Sombre</div>
+    </div>
+  </div>
+
+  <!-- Barre de navigation -->
+  <div style="margin-top:auto;background:#FFFFFF;border-top:1px solid #ECEAF3;padding:10px 16px 26px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="#m-dashboard" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+    </a>
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Stats
+    </div>
+    <a href="#m-saisie" aria-label="Ajouter une dépense" style="width:60px;height:60px;border-radius:50%;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;margin-top:-30px;box-shadow:0 8px 20px rgba(91,75,219,0.35);">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+    </a>
+    <a href="#m-historique" style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#6B6880;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+    </a>
+    <div style="width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#5B4BDB;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+    </div>
+  </div>
+
+</div></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="part" id="mac">
+    <h2 class="part__title">Mac</h2>
+    <p class="part__text">Adaptation à 1360 px : barre latérale, tableau et panneau latéral à la place de la barre du bas et des écrans plein format. Les écrans se réduisent pour tenir dans ta fenêtre.</p>
+    <div class="stack">
+      <section class="board board--desktop" id="d-dashboard" aria-label="Dashboard">
+        <h3 class="board__title">Dashboard</h3>
+        <div class="board__viewport" data-w="1360" data-h="1000">
+          <div class="board__frame" style="width:1360px;height:1000px"><div style="width:1360px;height:1000px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;">
+
+  <!-- Barre latérale -->
+  <div style="width:232px;flex:none;box-sizing:border-box;background:#FFFFFF;border-right:1px solid #ECEAF3;padding:28px 16px 24px;display:flex;flex-direction:column;gap:28px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:0 8px;">
+      <div style="width:40px;height:40px;border-radius:14px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.01em;">Lisboa</div>
+        <div style="font-size:12px;color:#6B6880;">Erasmus 2026–27</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;background:#F1EEFF;color:#5B4BDB;font-size:15px;font-weight:700;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8M15 7h6v6"/></svg>Statistiques
+      </div>
+      <a href="#d-historique" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+      </a>
+      <a href="#d-categories" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1"/></svg>Catégories
+      </a>
+      <a href="#d-reglages" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+      </a>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#F6F5F1;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;"><span>Séjour Erasmus</span><span style="color:#6B6880;">J20 / 153</span></div>
+        <div style="height:8px;border-radius:8px;background:#E3E0EE;"><div style="width:13%;height:8px;border-radius:8px;background:#5B4BDB;"></div></div>
+        <div style="font-size:12px;color:#6B6880;">1 sept. 2026 → 31 janv. 2027</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;color:#6B6880;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Synchronisé avec l'iPhone</div>
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div style="flex:1;min-width:0;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;gap:24px;">
+
+    <!-- En-tête -->
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.02em;">Septembre 2026</h3>
+        <div style="display:flex;gap:8px;">
+          <button aria-label="Mois précédent" style="width:40px;height:40px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button aria-label="Mois suivant" style="width:40px;height:40px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);opacity:0.5;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <a href="#d-saisie" style="display:flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:16px;background:#5B4BDB;color:#FFFFFF;font-size:16px;font-weight:700;box-shadow:0 8px 20px rgba(91,75,219,0.3);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nouvelle dépense
+      </a>
+    </div>
+
+    <!-- Chiffres clés -->
+    <div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:16px;">
+      <div style="background:#1D1B2E;color:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:14px;font-weight:500;color:#C9C7DB;">Dépensé ce mois</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">970,00&nbsp;€</div>
+        <div style="font-size:13px;color:#C9C7DB;">Jour 20 sur 30</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Moyenne par jour</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">27,50&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">hors logement</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Projection fin de mois</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">≈&nbsp;1&nbsp;245&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">10 jours restants</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Depuis le début du séjour</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">970,00&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">13&nbsp;% du séjour écoulé</div>
+      </div>
+    </div>
+
+    <!-- Graphes -->
+    <div style="display:flex;gap:24px;">
+      <div style="width:700px;flex:none;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Rythme du mois</h4>
+            <div style="font-size:14px;color:#6B6880;">Cumul hors logement, avec projection</div>
+          </div>
+          <div style="display:flex;gap:16px;font-size:13px;color:#6B6880;">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:16px;height:3px;border-radius:2px;background:#5B4BDB;"></span>Réel</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:16px;height:0;border-top:3px dotted #5B4BDB;"></span>Projection</span>
+          </div>
+        </div>
+        <svg width="652" height="224" viewBox="0 0 652 224" role="img" aria-label="Courbe cumulée des dépenses hors logement : environ 550 euros au 20 septembre, projection à environ 825 euros au 30">
+          <g stroke="#ECEAF3" stroke-width="1">
+            <line x1="42" y1="196" x2="638" y2="196"/>
+            <line x1="42" y1="134.7" x2="638" y2="134.7"/>
+            <line x1="42" y1="73.3" x2="638" y2="73.3"/>
+            <line x1="42" y1="12" x2="638" y2="12"/>
+          </g>
+          <g font-size="12" fill="#6B6880" text-anchor="end" font-family="DM Sans, sans-serif">
+            <text x="34" y="200">0</text><text x="34" y="138.7">300</text><text x="34" y="77.3">600</text><text x="34" y="16">900</text>
+          </g>
+          <path d="M42.0 188.8 L62.6 186.4 L83.1 180.7 L103.7 178.8 L124.2 170.4 L144.8 165.9 L165.3 162.9 L185.9 156.7 L206.4 155.1 L227.0 149.8 L247.5 145.9 L268.1 136.7 L288.6 126.1 L309.2 121.2 L329.7 118.9 L350.3 112.2 L370.8 106.7 L391.4 103.8 L411.9 96.0 L432.5 83.6 L432.5 196.0 L42.0 196.0 Z" fill="#5B4BDB" fill-opacity="0.10"/>
+          <path d="M42.0 188.8 L62.6 186.4 L83.1 180.7 L103.7 178.8 L124.2 170.4 L144.8 165.9 L165.3 162.9 L185.9 156.7 L206.4 155.1 L227.0 149.8 L247.5 145.9 L268.1 136.7 L288.6 126.1 L309.2 121.2 L329.7 118.9 L350.3 112.2 L370.8 106.7 L391.4 103.8 L411.9 96.0 L432.5 83.6" fill="none" stroke="#5B4BDB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M432.5 83.6 L638.0 27.3" fill="none" stroke="#5B4BDB" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+          <circle cx="432.5" cy="83.6" r="6" fill="#5B4BDB" stroke="#FFFFFF" stroke-width="3"/>
+          <text x="424" y="70" font-size="12" font-weight="700" fill="#1D1B2E" text-anchor="end" font-family="DM Sans, sans-serif">Aujourd'hui · 550 €</text>
+          <text x="636" y="48" font-size="12" font-weight="700" fill="#1D1B2E" text-anchor="end" font-family="DM Sans, sans-serif">≈ 825 €</text>
+          <g font-size="12" fill="#6B6880" text-anchor="middle" font-family="DM Sans, sans-serif">
+            <text x="42" y="216">1</text><text x="124.2" y="216">5</text><text x="227" y="216">10</text><text x="329.7" y="216">15</text><text x="432.5" y="216">20</text><text x="535.2" y="216">25</text><text x="638" y="216">30</text>
+          </g>
+        </svg>
+      </div>
+
+      <div style="flex:1;min-width:0;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Où part l'argent</h4>
+        <div style="display:flex;align-items:center;gap:18px;flex:1;">
+          <div style="position:relative;width:124px;height:124px;flex:none;">
+            <svg width="124" height="124" viewBox="0 0 140 140" role="img" aria-label="Répartition des dépenses : logement 43 %, courses 17 %, activités 15 %, voyages 9 %, transport 6 %, autres 10 %">
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#8B7CF6" stroke-width="16" stroke-dasharray="144.41 194.88" stroke-dashoffset="0.00" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#19A974" stroke-width="16" stroke-dasharray="56.26 283.03" stroke-dashoffset="-146.91" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#F59E42" stroke-width="16" stroke-dasharray="47.17 292.12" stroke-dashoffset="-205.67" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#EC6B9A" stroke-width="16" stroke-dasharray="27.23 312.06" stroke-dashoffset="-255.34" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#3B9EEB" stroke-width="16" stroke-dasharray="18.84 320.46" stroke-dashoffset="-285.08" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#A3A1B5" stroke-width="16" stroke-dasharray="30.38 308.91" stroke-dashoffset="-306.41" transform="rotate(-90 70 70)"/>
+            </svg>
+            <div style="position:absolute;left:0;top:0;width:124px;height:124px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:12px;color:#6B6880;">hors loyer</div>
+              <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">550&nbsp;€</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:11px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#8B7CF6;flex:none;"></span><span style="flex:1;">Logement</span><span style="font-weight:700;">420&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span><span style="flex:1;">Courses</span><span style="font-weight:700;">168&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span><span style="flex:1;">Activités</span><span style="font-weight:700;">142&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#EC6B9A;flex:none;"></span><span style="flex:1;">Voyages</span><span style="font-weight:700;">85&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span><span style="flex:1;">Transport</span><span style="font-weight:700;">61&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#A3A1B5;flex:none;"></span><span style="flex:1;">Autres</span><span style="font-weight:700;">94&nbsp;€</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus + dernières dépenses -->
+    <div style="display:flex;gap:24px;flex:1;min-height:0;">
+      <div style="flex:1;min-width:0;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Mes focus</h4>
+          <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Gérer</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #ECEAF3;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses › Viande</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 18, 24, 16 euros"><div style="width:14px;height:19px;border-radius:4px;background:#19A974;"></div><div style="width:14px;height:26px;border-radius:4px;background:#19A974;"></div><div style="width:14px;height:17px;border-radius:4px;background:#19A97466;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">58,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 20&nbsp;€ / sem.</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #ECEAF3;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Transport</div><div style="font-size:13px;color:#6B6880;">Catégorie entière</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 24, 21, 16 euros"><div style="width:14px;height:26px;border-radius:4px;background:#3B9EEB;"></div><div style="width:14px;height:22px;border-radius:4px;background:#3B9EEB;"></div><div style="width:14px;height:17px;border-radius:4px;background:#3B9EEB66;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">61,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 21&nbsp;€ / sem.</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités › Restaurants</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 22, 30, 22 euros"><div style="width:14px;height:23px;border-radius:4px;background:#F59E42;"></div><div style="width:14px;height:32px;border-radius:4px;background:#F59E42;"></div><div style="width:14px;height:23px;border-radius:4px;background:#F59E4266;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">74,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 26&nbsp;€ / sem.</div></div>
+        </div>
+      </div>
+
+      <div style="width:400px;flex:none;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px 24px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Dernières dépenses</h4>
+          <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Historique</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses · Aujourd'hui</div></div>
+          <div style="font-size:15px;font-weight:700;">−12,40&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#F59E4226;color:#B35F08;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités · Hier</div></div>
+          <div style="font-size:15px;font-weight:700;">−18,50&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#3B9EEB22;color:#1F6FB8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 21v-4M16 21v-4"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Uber / Bolt</div><div style="font-size:13px;color:#6B6880;">Transport · Hier</div></div>
+          <div style="font-size:15px;font-weight:700;">−6,20&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Fruits &amp; légumes</div><div style="font-size:13px;color:#6B6880;">Courses · 17 sept.</div></div>
+          <div style="font-size:15px;font-weight:700;">−9,30&nbsp;€</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div></div>
+        </div>
+      </section>
+      <section class="board board--desktop" id="d-saisie" aria-label="Saisie d'une dépense">
+        <h3 class="board__title">Saisie d'une dépense</h3>
+        <div class="board__viewport" data-w="1360" data-h="1000">
+          <div class="board__frame" style="width:1360px;height:1000px"><div style="position:relative;width:1360px;height:1000px;overflow:hidden;background:#F6F5F1;font-family:'DM Sans',system-ui,sans-serif;color:#1D1B2E;">
+
+  <!-- Dashboard en arrière-plan -->
+  <div style="position:absolute;left:0;top:0;width:1360px;height:1000px;">
+    <div style="width:1360px;height:1000px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;">
+
+  <!-- Barre latérale -->
+  <div style="width:232px;flex:none;box-sizing:border-box;background:#FFFFFF;border-right:1px solid #ECEAF3;padding:28px 16px 24px;display:flex;flex-direction:column;gap:28px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:0 8px;">
+      <div style="width:40px;height:40px;border-radius:14px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.01em;">Lisboa</div>
+        <div style="font-size:12px;color:#6B6880;">Erasmus 2026–27</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;background:#F1EEFF;color:#5B4BDB;font-size:15px;font-weight:700;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8M15 7h6v6"/></svg>Statistiques
+      </div>
+      <a href="#d-historique" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+      </a>
+      <a href="#d-categories" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1"/></svg>Catégories
+      </a>
+      <a href="#d-reglages" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+      </a>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#F6F5F1;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;"><span>Séjour Erasmus</span><span style="color:#6B6880;">J20 / 153</span></div>
+        <div style="height:8px;border-radius:8px;background:#E3E0EE;"><div style="width:13%;height:8px;border-radius:8px;background:#5B4BDB;"></div></div>
+        <div style="font-size:12px;color:#6B6880;">1 sept. 2026 → 31 janv. 2027</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;color:#6B6880;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Synchronisé avec l'iPhone</div>
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div style="flex:1;min-width:0;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;gap:24px;">
+
+    <!-- En-tête -->
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.02em;">Septembre 2026</h3>
+        <div style="display:flex;gap:8px;">
+          <button aria-label="Mois précédent" style="width:40px;height:40px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button aria-label="Mois suivant" style="width:40px;height:40px;border-radius:50%;border:0;background:#FFFFFF;color:#1D1B2E;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(29,27,46,0.06);opacity:0.5;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+      <a href="#d-saisie" style="display:flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:16px;background:#5B4BDB;color:#FFFFFF;font-size:16px;font-weight:700;box-shadow:0 8px 20px rgba(91,75,219,0.3);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nouvelle dépense
+      </a>
+    </div>
+
+    <!-- Chiffres clés -->
+    <div style="display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:16px;">
+      <div style="background:#1D1B2E;color:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;">
+        <div style="font-size:14px;font-weight:500;color:#C9C7DB;">Dépensé ce mois</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">970,00&nbsp;€</div>
+        <div style="font-size:13px;color:#C9C7DB;">Jour 20 sur 30</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Moyenne par jour</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">27,50&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">hors logement</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Projection fin de mois</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">≈&nbsp;1&nbsp;245&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">10 jours restants</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="font-size:14px;font-weight:500;color:#6B6880;">Depuis le début du séjour</div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:34px;font-weight:700;letter-spacing:-0.02em;">970,00&nbsp;€</div>
+        <div style="font-size:13px;color:#6B6880;">13&nbsp;% du séjour écoulé</div>
+      </div>
+    </div>
+
+    <!-- Graphes -->
+    <div style="display:flex;gap:24px;">
+      <div style="width:700px;flex:none;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Rythme du mois</h4>
+            <div style="font-size:14px;color:#6B6880;">Cumul hors logement, avec projection</div>
+          </div>
+          <div style="display:flex;gap:16px;font-size:13px;color:#6B6880;">
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:16px;height:3px;border-radius:2px;background:#5B4BDB;"></span>Réel</span>
+            <span style="display:flex;align-items:center;gap:6px;"><span style="width:16px;height:0;border-top:3px dotted #5B4BDB;"></span>Projection</span>
+          </div>
+        </div>
+        <svg width="652" height="224" viewBox="0 0 652 224" role="img" aria-label="Courbe cumulée des dépenses hors logement : environ 550 euros au 20 septembre, projection à environ 825 euros au 30">
+          <g stroke="#ECEAF3" stroke-width="1">
+            <line x1="42" y1="196" x2="638" y2="196"/>
+            <line x1="42" y1="134.7" x2="638" y2="134.7"/>
+            <line x1="42" y1="73.3" x2="638" y2="73.3"/>
+            <line x1="42" y1="12" x2="638" y2="12"/>
+          </g>
+          <g font-size="12" fill="#6B6880" text-anchor="end" font-family="DM Sans, sans-serif">
+            <text x="34" y="200">0</text><text x="34" y="138.7">300</text><text x="34" y="77.3">600</text><text x="34" y="16">900</text>
+          </g>
+          <path d="M42.0 188.8 L62.6 186.4 L83.1 180.7 L103.7 178.8 L124.2 170.4 L144.8 165.9 L165.3 162.9 L185.9 156.7 L206.4 155.1 L227.0 149.8 L247.5 145.9 L268.1 136.7 L288.6 126.1 L309.2 121.2 L329.7 118.9 L350.3 112.2 L370.8 106.7 L391.4 103.8 L411.9 96.0 L432.5 83.6 L432.5 196.0 L42.0 196.0 Z" fill="#5B4BDB" fill-opacity="0.10"/>
+          <path d="M42.0 188.8 L62.6 186.4 L83.1 180.7 L103.7 178.8 L124.2 170.4 L144.8 165.9 L165.3 162.9 L185.9 156.7 L206.4 155.1 L227.0 149.8 L247.5 145.9 L268.1 136.7 L288.6 126.1 L309.2 121.2 L329.7 118.9 L350.3 112.2 L370.8 106.7 L391.4 103.8 L411.9 96.0 L432.5 83.6" fill="none" stroke="#5B4BDB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M432.5 83.6 L638.0 27.3" fill="none" stroke="#5B4BDB" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>
+          <circle cx="432.5" cy="83.6" r="6" fill="#5B4BDB" stroke="#FFFFFF" stroke-width="3"/>
+          <text x="424" y="70" font-size="12" font-weight="700" fill="#1D1B2E" text-anchor="end" font-family="DM Sans, sans-serif">Aujourd'hui · 550 €</text>
+          <text x="636" y="48" font-size="12" font-weight="700" fill="#1D1B2E" text-anchor="end" font-family="DM Sans, sans-serif">≈ 825 €</text>
+          <g font-size="12" fill="#6B6880" text-anchor="middle" font-family="DM Sans, sans-serif">
+            <text x="42" y="216">1</text><text x="124.2" y="216">5</text><text x="227" y="216">10</text><text x="329.7" y="216">15</text><text x="432.5" y="216">20</text><text x="535.2" y="216">25</text><text x="638" y="216">30</text>
+          </g>
+        </svg>
+      </div>
+
+      <div style="flex:1;min-width:0;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Où part l'argent</h4>
+        <div style="display:flex;align-items:center;gap:18px;flex:1;">
+          <div style="position:relative;width:124px;height:124px;flex:none;">
+            <svg width="124" height="124" viewBox="0 0 140 140" role="img" aria-label="Répartition des dépenses : logement 43 %, courses 17 %, activités 15 %, voyages 9 %, transport 6 %, autres 10 %">
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#8B7CF6" stroke-width="16" stroke-dasharray="144.41 194.88" stroke-dashoffset="0.00" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#19A974" stroke-width="16" stroke-dasharray="56.26 283.03" stroke-dashoffset="-146.91" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#F59E42" stroke-width="16" stroke-dasharray="47.17 292.12" stroke-dashoffset="-205.67" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#EC6B9A" stroke-width="16" stroke-dasharray="27.23 312.06" stroke-dashoffset="-255.34" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#3B9EEB" stroke-width="16" stroke-dasharray="18.84 320.46" stroke-dashoffset="-285.08" transform="rotate(-90 70 70)"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="#A3A1B5" stroke-width="16" stroke-dasharray="30.38 308.91" stroke-dashoffset="-306.41" transform="rotate(-90 70 70)"/>
+            </svg>
+            <div style="position:absolute;left:0;top:0;width:124px;height:124px;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:12px;color:#6B6880;">hors loyer</div>
+              <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">550&nbsp;€</div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:11px;">
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#8B7CF6;flex:none;"></span><span style="flex:1;">Logement</span><span style="font-weight:700;">420&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span><span style="flex:1;">Courses</span><span style="font-weight:700;">168&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span><span style="flex:1;">Activités</span><span style="font-weight:700;">142&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#EC6B9A;flex:none;"></span><span style="flex:1;">Voyages</span><span style="font-weight:700;">85&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span><span style="flex:1;">Transport</span><span style="font-weight:700;">61&nbsp;€</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:14px;"><span style="width:10px;height:10px;border-radius:50%;background:#A3A1B5;flex:none;"></span><span style="flex:1;">Autres</span><span style="font-weight:700;">94&nbsp;€</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus + dernières dépenses -->
+    <div style="display:flex;gap:24px;flex:1;min-height:0;">
+      <div style="flex:1;min-width:0;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Mes focus</h4>
+          <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Gérer</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #ECEAF3;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses › Viande</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 18, 24, 16 euros"><div style="width:14px;height:19px;border-radius:4px;background:#19A974;"></div><div style="width:14px;height:26px;border-radius:4px;background:#19A974;"></div><div style="width:14px;height:17px;border-radius:4px;background:#19A97466;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">58,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 20&nbsp;€ / sem.</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #ECEAF3;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Transport</div><div style="font-size:13px;color:#6B6880;">Catégorie entière</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 24, 21, 16 euros"><div style="width:14px;height:26px;border-radius:4px;background:#3B9EEB;"></div><div style="width:14px;height:22px;border-radius:4px;background:#3B9EEB;"></div><div style="width:14px;height:17px;border-radius:4px;background:#3B9EEB66;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">61,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 21&nbsp;€ / sem.</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:12px 0;">
+          <span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span>
+          <div style="flex:1;min-width:0;"><div style="font-size:16px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités › Restaurants</div></div>
+          <div style="display:flex;align-items:flex-end;gap:6px;height:32px;" aria-label="Par semaine : 22, 30, 22 euros"><div style="width:14px;height:23px;border-radius:4px;background:#F59E42;"></div><div style="width:14px;height:32px;border-radius:4px;background:#F59E42;"></div><div style="width:14px;height:23px;border-radius:4px;background:#F59E4266;"></div></div>
+          <div style="width:96px;text-align:right;"><div style="font-size:16px;font-weight:700;">74,00&nbsp;€</div><div style="font-size:13px;color:#6B6880;">≈ 26&nbsp;€ / sem.</div></div>
+        </div>
+      </div>
+
+      <div style="width:400px;flex:none;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px 24px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:6px;">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Dernières dépenses</h4>
+          <span style="font-size:14px;font-weight:600;color:#5B4BDB;">Historique</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Viande</div><div style="font-size:13px;color:#6B6880;">Courses · Aujourd'hui</div></div>
+          <div style="font-size:15px;font-weight:700;">−12,40&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#F59E4226;color:#B35F08;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Restaurants</div><div style="font-size:13px;color:#6B6880;">Activités · Hier</div></div>
+          <div style="font-size:15px;font-weight:700;">−18,50&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#3B9EEB22;color:#1F6FB8;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 21v-4M16 21v-4"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Uber / Bolt</div><div style="font-size:13px;color:#6B6880;">Transport · Hier</div></div>
+          <div style="font-size:15px;font-weight:700;">−6,20&nbsp;€</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:7px 0;">
+          <div style="width:40px;height:40px;border-radius:12px;background:#19A97422;color:#0E7A54;display:flex;align-items:center;justify-content:center;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+          <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:600;">Fruits &amp; légumes</div><div style="font-size:13px;color:#6B6880;">Courses · 17 sept.</div></div>
+          <div style="font-size:15px;font-weight:700;">−9,30&nbsp;€</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+  </div>
+
+  <!-- Voile -->
+  <a href="#d-dashboard" aria-label="Fermer le panneau" style="position:absolute;left:0;top:0;width:1360px;height:1000px;background:rgba(29,27,46,0.45);"></a>
+
+  <!-- Panneau de saisie -->
+  <div style="position:absolute;right:0;top:0;width:500px;height:1000px;box-sizing:border-box;background:#FFFFFF;padding:32px;display:flex;flex-direction:column;gap:22px;box-shadow:-16px 0 48px rgba(29,27,46,0.18);">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:26px;font-weight:700;letter-spacing:-0.01em;">Nouvelle dépense</h4>
+      <a href="#d-dashboard" aria-label="Fermer" style="width:40px;height:40px;border-radius:50%;background:#F6F5F1;display:flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </a>
+    </div>
+
+    <!-- Montant -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <label for="d-saisie-montant" style="font-size:13px;font-weight:600;color:#6B6880;">Montant</label>
+      <div style="display:flex;align-items:center;height:76px;padding:0 20px;border-radius:20px;background:#F6F5F1;border:2px solid #5B4BDB;">
+        <input id="d-saisie-montant" type="text" inputmode="decimal" value="12,40" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:44px;font-weight:700;letter-spacing:-0.02em;color:#1D1B2E;">
+        <span style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:32px;font-weight:600;color:#A3A1B5;">€</span>
+      </div>
+    </div>
+
+    <!-- Date -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <label for="d-saisie-date" style="font-size:13px;font-weight:600;color:#6B6880;">Date</label>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input id="d-saisie-date" type="text" value="20/09/2026" style="width:140px;height:44px;box-sizing:border-box;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;background:#FFFFFF;font-size:15px;font-weight:600;color:#1D1B2E;">
+        <div style="display:flex;align-items:center;height:44px;padding:0 16px;border-radius:14px;background:#5B4BDB;color:#FFFFFF;font-size:15px;font-weight:600;">Aujourd'hui</div>
+        <div style="display:flex;align-items:center;height:44px;padding:0 16px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;">Hier</div>
+      </div>
+    </div>
+
+    <!-- Catégorie -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:13px;font-weight:600;color:#6B6880;">Catégorie</div>
+      <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#8B7CF6;"></span>Logement</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#19A97426;border:2px solid #19A974;box-sizing:border-box;font-size:15px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#F59E42;"></span>Activités</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9EEB;"></span>Transport</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#EC6B9A;"></span>Voyages</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#14B8C4;"></span>Abonnements</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#EF6461;"></span>Santé</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#D9A521;"></span>Shopping</div>
+        <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:15px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#A3A1B5;"></span>Divers</div>
+      </div>
+    </div>
+
+    <!-- Sous-catégorie -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font-size:13px;font-weight:600;color:#6B6880;">Sous-catégorie</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:14px;font-weight:600;">Viande</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Poisson</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Fruits &amp; légumes</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Boulangerie</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Produits laitiers &amp; œufs</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Épicerie</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Boissons</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Snacks</div>
+        <div style="display:flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;background:#F6F5F1;font-size:14px;font-weight:500;">Hygiène &amp; entretien</div>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <label for="d-saisie-tags" style="font-size:13px;font-weight:600;color:#6B6880;">Tags (optionnel)</label>
+      <div style="display:flex;align-items:center;gap:8px;min-height:48px;box-sizing:border-box;padding:6px 10px;border-radius:14px;border:1.5px solid #ECEAF3;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:14px;font-weight:600;">#avec-amis</span>
+        <input id="d-saisie-tags" type="text" placeholder="Ajouter un tag…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:15px;color:#1D1B2E;">
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;gap:10px;">
+        <a href="#d-dashboard" style="flex:1;height:52px;border-radius:16px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:10px;font-size:16px;font-weight:700;">Enregistrer<span style="font-size:12px;font-weight:600;opacity:0.85;padding:3px 8px;border-radius:8px;background:#FFFFFF33;">⌘ ↵</span></a>
+        <a href="#d-dashboard" style="width:110px;height:52px;border-radius:16px;background:#F6F5F1;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:600;">Annuler</a>
+      </div>
+      <div style="height:48px;border-radius:16px;border:1.5px solid #ECEAF3;display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;color:#1D1B2E;">Enregistrer et en ajouter une autre<span style="font-size:12px;font-weight:600;color:#6B6880;padding:3px 8px;border-radius:8px;background:#F6F5F1;">⇧ ⌘ ↵</span></div>
+    </div>
+
+  </div>
+</div></div>
+        </div>
+      </section>
+      <section class="board board--desktop" id="d-historique" aria-label="Historique">
+        <h3 class="board__title">Historique</h3>
+        <div class="board__viewport" data-w="1360" data-h="960">
+          <div class="board__frame" style="width:1360px;height:960px"><div style="width:1360px;height:960px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;">
+
+  <!-- Barre latérale -->
+  <div style="width:232px;flex:none;box-sizing:border-box;background:#FFFFFF;border-right:1px solid #ECEAF3;padding:28px 16px 24px;display:flex;flex-direction:column;gap:28px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:0 8px;">
+      <div style="width:40px;height:40px;border-radius:14px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.01em;">Lisboa</div>
+        <div style="font-size:12px;color:#6B6880;">Erasmus 2026–27</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <a href="#d-dashboard" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+      </a>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8M15 7h6v6"/></svg>Statistiques
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;background:#F1EEFF;color:#5B4BDB;font-size:15px;font-weight:700;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+      </div>
+      <a href="#d-categories" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1"/></svg>Catégories
+      </a>
+      <a href="#d-reglages" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+      </a>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#F6F5F1;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;"><span>Séjour Erasmus</span><span style="color:#6B6880;">J20 / 153</span></div>
+        <div style="height:8px;border-radius:8px;background:#E3E0EE;"><div style="width:13%;height:8px;border-radius:8px;background:#5B4BDB;"></div></div>
+        <div style="font-size:12px;color:#6B6880;">1 sept. 2026 → 31 janv. 2027</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;color:#6B6880;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Synchronisé avec l'iPhone</div>
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div style="flex:1;min-width:0;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;gap:20px;">
+
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <div style="font-size:14px;font-weight:600;color:#6B6880;">Septembre 2026 · 970,00&nbsp;€ au total</div>
+        <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.02em;">Historique</h3>
+      </div>
+      <a href="#d-saisie" style="display:flex;align-items:center;gap:8px;height:48px;padding:0 22px;border-radius:16px;background:#5B4BDB;color:#FFFFFF;font-size:16px;font-weight:700;box-shadow:0 8px 20px rgba(91,75,219,0.3);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nouvelle dépense
+      </a>
+    </div>
+
+    <!-- Barre d'outils -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <label style="display:flex;align-items:center;gap:10px;width:300px;height:44px;box-sizing:border-box;padding:0 14px;border-radius:14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(29,27,46,0.06);color:#6B6880;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="text" aria-label="Rechercher une dépense" placeholder="Rechercher…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:15px;color:#1D1B2E;">
+      </label>
+      <div style="display:flex;align-items:center;gap:6px;height:44px;padding:0 16px;border-radius:14px;background:#1D1B2E;color:#FFFFFF;font-size:14px;font-weight:600;">Septembre 2026<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:6px;height:44px;padding:0 16px;border-radius:14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(29,27,46,0.06);font-size:14px;font-weight:500;">Catégorie<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div style="display:flex;align-items:center;gap:6px;height:44px;padding:0 16px;border-radius:14px;background:#FFFFFF;box-shadow:0 1px 2px rgba(29,27,46,0.06);font-size:14px;font-weight:500;">Tag<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:14px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Exporter CSV
+      </div>
+    </div>
+
+    <!-- Tableau + panneau -->
+    <div style="display:flex;gap:24px;align-items:flex-start;">
+
+      <div style="flex:1;min-width:0;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:12px 12px 16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;padding:8px 16px 12px;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#6B6880;">
+          <span>Date</span><span>Dépense</span><span>Tag</span><span style="text-align:right;">Montant</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">dim. 20 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Viande<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−12,40&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;background:#F1EEFF;box-shadow:inset 0 0 0 1.5px #5B4BDB55;">
+          <span style="font-size:14px;color:#4A4760;">sam. 19 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span>Restaurants<span style="font-size:13px;font-weight:400;color:#6B6880;">Activités</span></span>
+          <span style="display:flex;"><span style="height:28px;padding:0 10px;display:flex;align-items:center;border-radius:999px;background:#FFFFFF;color:#4A3FB5;font-size:13px;font-weight:600;">#avec-amis</span></span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−18,50&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">sam. 19 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#3B9EEB;flex:none;"></span>Uber / Bolt<span style="font-size:13px;font-weight:400;color:#6B6880;">Transport</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−6,20&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">ven. 18 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span>Bars &amp; soirées<span style="font-size:13px;font-weight:400;color:#6B6880;">Activités</span></span>
+          <span style="display:flex;"><span style="height:28px;padding:0 10px;display:flex;align-items:center;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#soirée-esn</span></span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−14,00&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">ven. 18 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Boulangerie<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−4,20&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">jeu. 17 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Fruits &amp; légumes<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−9,30&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">mer. 16 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Viande<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−8,60&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">mar. 15 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Épicerie<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−21,50&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">lun. 14 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;flex:none;"></span>Cafés<span style="font-size:13px;font-weight:400;color:#6B6880;">Activités</span></span>
+          <span style="display:flex;"><span style="height:28px;padding:0 10px;display:flex;align-items:center;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#petit-plaisir</span></span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−2,80&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">dim. 13 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#EC6B9A;flex:none;"></span>Hébergement<span style="font-size:13px;font-weight:400;color:#6B6880;">Voyages</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−55,00&nbsp;€</span>
+        </div>
+        <div style="display:grid;grid-template-columns:120px minmax(0, 1fr) 150px 100px;gap:12px;align-items:center;height:56px;padding:0 16px;border-radius:16px;">
+          <span style="font-size:14px;color:#4A4760;">dim. 13 sept.</span>
+          <span style="display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;"><span style="width:10px;height:10px;border-radius:50%;background:#19A974;flex:none;"></span>Viande<span style="font-size:13px;font-weight:400;color:#6B6880;">Courses</span></span>
+          <span style="color:#A3A1B5;">—</span>
+          <span style="text-align:right;font-size:15px;font-weight:700;">−15,20&nbsp;€</span>
+        </div>
+        <div style="padding:14px 16px 0;font-size:14px;font-weight:600;color:#5B4BDB;">Charger les dépenses précédentes</div>
+      </div>
+
+      <!-- Panneau de modification -->
+      <div style="width:380px;flex:none;box-sizing:border-box;background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Modifier la dépense</h4>
+            <div style="font-size:13px;color:#6B6880;">sam. 19 sept. · Restaurants</div>
+          </div>
+          <div aria-label="Fermer le panneau" style="width:36px;height:36px;border-radius:50%;background:#F6F5F1;display:flex;align-items:center;justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="d-historique-m" style="font-size:13px;font-weight:600;color:#6B6880;">Montant</label>
+          <div style="display:flex;align-items:center;height:64px;padding:0 18px;border-radius:18px;background:#F6F5F1;border:2px solid #5B4BDB;">
+            <input id="d-historique-m" type="text" inputmode="decimal" value="18,50" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:32px;font-weight:700;color:#1D1B2E;">
+            <span style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:24px;font-weight:600;color:#A3A1B5;">€</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="d-historique-d" style="font-size:13px;font-weight:600;color:#6B6880;">Date</label>
+          <input id="d-historique-d" type="text" value="19/09/2026" style="height:44px;box-sizing:border-box;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;background:#FFFFFF;font-size:15px;font-weight:600;color:#1D1B2E;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:600;color:#6B6880;">Catégorie</div>
+          <div style="display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="width:10px;height:10px;border-radius:50%;background:#F59E42;"></span><span style="flex:1;">Activités</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6880" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="font-size:13px;font-weight:600;color:#6B6880;">Sous-catégorie</div>
+          <div style="display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;font-size:15px;font-weight:500;"><span style="flex:1;">Restaurants</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B6880" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label for="d-historique-t" style="font-size:13px;font-weight:600;color:#6B6880;">Tags</label>
+          <div style="display:flex;align-items:center;gap:8px;min-height:46px;box-sizing:border-box;padding:6px 10px;border-radius:14px;border:1.5px solid #ECEAF3;">
+            <span style="display:flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:14px;font-weight:600;">#avec-amis</span>
+            <input id="d-historique-t" type="text" placeholder="Ajouter…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:15px;color:#1D1B2E;">
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px;">
+          <div style="flex:1;height:50px;border-radius:16px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;">Enregistrer</div>
+          <div style="height:50px;padding:0 18px;border-radius:16px;border:1.5px solid #EF646155;color:#B23431;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;font-weight:700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Supprimer
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div></div>
+        </div>
+      </section>
+      <section class="board board--desktop" id="d-reglages" aria-label="Réglages">
+        <h3 class="board__title">Réglages</h3>
+        <div class="board__viewport" data-w="1360" data-h="960">
+          <div class="board__frame" style="width:1360px;height:960px"><div style="width:1360px;height:960px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;display:flex;">
+
+  <!-- Barre latérale -->
+  <div style="width:232px;flex:none;box-sizing:border-box;background:#FFFFFF;border-right:1px solid #ECEAF3;padding:28px 16px 24px;display:flex;flex-direction:column;gap:28px;">
+    <div style="display:flex;align-items:center;gap:12px;padding:0 8px;">
+      <div style="width:40px;height:40px;border-radius:14px;background:#5B4BDB;color:#FFFFFF;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.01em;">Lisboa</div>
+        <div style="font-size:12px;color:#6B6880;">Erasmus 2026–27</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <a href="#d-dashboard" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>Accueil
+      </a>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8M15 7h6v6"/></svg>Statistiques
+      </div>
+      <a href="#d-historique" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Historique
+      </a>
+      <a href="#d-categories" style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;color:#4A4760;font-size:15px;font-weight:500;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="8" cy="8" r="1"/></svg>Catégories
+      </a>
+      <div style="display:flex;align-items:center;gap:12px;height:44px;padding:0 12px;border-radius:14px;background:#F1EEFF;color:#5B4BDB;font-size:15px;font-weight:700;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>Réglages
+      </div>
+    </div>
+    <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px;">
+      <div style="background:#F6F5F1;border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;"><span>Séjour Erasmus</span><span style="color:#6B6880;">J20 / 153</span></div>
+        <div style="height:8px;border-radius:8px;background:#E3E0EE;"><div style="width:13%;height:8px;border-radius:8px;background:#5B4BDB;"></div></div>
+        <div style="font-size:12px;color:#6B6880;">1 sept. 2026 → 31 janv. 2027</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:0 8px;font-size:13px;color:#6B6880;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Synchronisé avec l'iPhone</div>
+    </div>
+  </div>
+
+  <!-- Contenu -->
+  <div style="flex:1;min-width:0;box-sizing:border-box;padding:32px;display:flex;flex-direction:column;gap:24px;">
+    <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.02em;">Réglages</h3>
+
+    <div style="display:flex;gap:24px;align-items:flex-start;">
+
+      <!-- Colonne gauche -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;">
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Séjour</h4>
+          <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:12px;">
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label for="d-reglages-arrivee" style="font-size:13px;font-weight:600;color:#6B6880;">Arrivée à Lisbonne</label>
+              <input id="d-reglages-arrivee" type="text" value="01/09/2026" style="height:46px;box-sizing:border-box;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;background:#FFFFFF;font-size:15px;font-weight:600;color:#1D1B2E;">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label for="d-reglages-fin" style="font-size:13px;font-weight:600;color:#6B6880;">Fin de l'Erasmus</label>
+              <input id="d-reglages-fin" type="text" value="31/01/2027" style="height:46px;box-sizing:border-box;padding:0 14px;border-radius:14px;border:1.5px solid #ECEAF3;background:#FFFFFF;font-size:15px;font-weight:600;color:#1D1B2E;">
+            </div>
+          </div>
+          <div style="font-size:14px;color:#6B6880;">153 jours · 5 mois · devise : euro (€)</div>
+        </div>
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Synchronisation</h4>
+            <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;border-radius:999px;background:#19A97422;color:#0B6B49;font-size:13px;font-weight:700;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Synchronisé · il y a 2 min</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <div style="font-size:13px;font-weight:600;color:#6B6880;">Code secret</div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;display:flex;align-items:center;height:46px;padding:0 14px;border-radius:14px;background:#F6F5F1;font-size:16px;letter-spacing:0.12em;color:#4A4760;">••••-••••-••••</div>
+              <div style="display:flex;align-items:center;height:46px;padding:0 16px;border-radius:14px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;">Afficher</div>
+              <div style="display:flex;align-items:center;height:46px;padding:0 16px;border-radius:14px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;">Copier</div>
+            </div>
+            <div style="font-size:13px;line-height:1.45;color:#6B6880;">Saisis ce code une fois sur chaque appareil pour retrouver tes dépenses. Garde-le en lieu sûr : sans lui, impossible de rouvrir tes données sur un nouvel appareil.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="font-size:13px;font-weight:600;color:#6B6880;padding-bottom:6px;">Appareils</div>
+            <div style="display:flex;align-items:center;gap:12px;height:52px;border-top:1px solid #ECEAF3;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A4760" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg><span style="flex:1;font-size:15px;font-weight:500;">Mac · ce navigateur</span><span style="font-size:13px;color:#6B6880;">à l'instant</span></div>
+            <div style="display:flex;align-items:center;gap:12px;height:52px;border-top:1px solid #ECEAF3;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4A4760" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg><span style="flex:1;font-size:15px;font-weight:500;">iPhone · application installée</span><span style="font-size:13px;color:#6B6880;">il y a 2 min</span></div>
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Apparence</h4>
+          <div style="background:#ECEAF3;border-radius:16px;padding:4px;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:4px;">
+            <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:500;color:#4A4760;">Auto</div>
+            <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:#FFFFFF;font-size:15px;font-weight:700;box-shadow:0 1px 3px rgba(29,27,46,0.12);">Clair</div>
+            <div style="height:40px;display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:15px;font-weight:500;color:#4A4760;">Sombre</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span style="font-size:14px;color:#6B6880;flex:1;">Couleur d'accent</span>
+            <span style="width:32px;height:32px;border-radius:50%;background:#5B4BDB;box-shadow:0 0 0 3px #FFFFFF,0 0 0 5px #5B4BDB;"></span>
+            <span style="width:32px;height:32px;border-radius:50%;background:#0E9F8E;"></span>
+            <span style="width:32px;height:32px;border-radius:50%;background:#E4572E;"></span>
+            <span style="width:32px;height:32px;border-radius:50%;background:#1D1B2E;"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne droite -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;">
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+          <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Organisation</h4>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:15px;font-weight:600;">Catégories et sous-catégories</div><a href="#d-categories" style="font-size:14px;font-weight:700;color:#5B4BDB;">Gérer</a></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#8B7CF626;font-size:13px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#8B7CF6;"></span>Logement</span>
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#19A97426;font-size:13px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#19A974;"></span>Courses</span>
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#F59E4230;font-size:13px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#F59E42;"></span>Activités</span>
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#3B9EEB26;font-size:13px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#3B9EEB;"></span>Transport</span>
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;background:#EC6B9A26;font-size:13px;font-weight:500;"><span style="width:8px;height:8px;border-radius:50%;background:#EC6B9A;"></span>Voyages</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F6F5F1;font-size:13px;font-weight:600;color:#6B6880;">+ 4 autres · 44 sous-catégories</span>
+            </div>
+          </div>
+          <div style="height:1px;background:#ECEAF3;"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:15px;font-weight:600;">Focus épinglés</div><span style="font-size:14px;font-weight:700;color:#5B4BDB;">Gérer</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:13px;font-weight:600;">Viande</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:13px;font-weight:600;">Transport</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#1D1B2E;color:#FFFFFF;font-size:13px;font-weight:600;">Restaurants</span>
+              <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:999px;border:1.5px dashed #A3A1B5;color:#6B6880;font-size:13px;font-weight:600;">+ Ajouter</span>
+            </div>
+          </div>
+          <div style="height:1px;background:#ECEAF3;"></div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:15px;font-weight:600;">Tags</div><span style="font-size:14px;font-weight:700;color:#5B4BDB;">Gérer</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#avec-amis</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#soirée-esn</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#petit-plaisir</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#imprévu</span>
+              <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;background:#F1EEFF;color:#4A3FB5;font-size:13px;font-weight:600;">#cash</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <h4 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:22px;font-weight:700;">Mes données</h4>
+            <div style="font-size:14px;color:#6B6880;">Exporte régulièrement une sauvegarde : c'est ta copie de secours.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:10px;">
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:76px;border-radius:16px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;text-align:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Export CSV
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:76px;border-radius:16px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;text-align:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Sauvegarde JSON
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:76px;border-radius:16px;border:1.5px solid #ECEAF3;font-size:14px;font-weight:600;text-align:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V5M7 9l5-5 5 5M5 20h14"/></svg>Importer
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;border-radius:28px;padding:24px;display:flex;align-items:center;gap:16px;border:1.5px solid #EF646133;">
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+            <div style="font-size:16px;font-weight:700;color:#B23431;">Zone sensible</div>
+            <div style="font-size:14px;color:#6B6880;">Efface toutes les dépenses, sur tous tes appareils synchronisés. Cette action est définitive.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;height:46px;padding:0 16px;border-radius:14px;border:1.5px solid #EF646155;color:#B23431;font-size:14px;font-weight:700;flex:none;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Tout effacer
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div></div>
+        </div>
+      </section>
+      <section class="board board--desktop" id="d-categories" aria-label="Catégories et sous-catégories proposées">
+        <h3 class="board__title">Catégories et sous-catégories proposées</h3>
+        <div class="board__viewport" data-w="1360" data-h="920">
+          <div class="board__frame" style="width:1360px;height:920px"><div style="width:1360px;height:920px;box-sizing:border-box;background:#F6F5F1;color:#1D1B2E;font-family:'DM Sans',system-ui,sans-serif;padding:40px;display:flex;flex-direction:column;gap:24px;">
+
+  <div style="display:flex;flex-direction:column;gap:6px;">
+    <h3 style="margin:0;font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:36px;font-weight:700;letter-spacing:-0.02em;">Catégories &amp; sous-catégories</h3>
+    <div style="font-size:16px;color:#6B6880;">Proposition de départ, entièrement modifiable. Chaque sous-catégorie peut devenir un focus.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:16px;">
+
+    <!-- Logement -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#8B7CF626;color:#6A57E0;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Logement</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#8B7CF626;">Loyer</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#8B7CF626;">Charges</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#8B7CF626;">Caution</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#8B7CF626;">Équipement maison</span>
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#19A97426;color:#0E7A54;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 9a2 2 0 0 1-2 1.7h-7a2 2 0 0 1-2-1.7zM9 9l3-5 3 5"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Courses</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Viande</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Poisson</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Fruits &amp; légumes</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Boulangerie</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Produits laitiers &amp; œufs</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Épicerie</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Boissons</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Snacks</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#19A97426;">Hygiène &amp; entretien</span>
+      </div>
+    </div>
+
+    <!-- Activités -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#F59E4230;color:#B35F08;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Activités</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Restaurants</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Cafés</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Bars &amp; soirées</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Excursions</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Culture &amp; visites</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Sport &amp; loisirs</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#F59E4230;">Événements ESN</span>
+      </div>
+    </div>
+
+    <!-- Transport -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#3B9EEB26;color:#1F6FB8;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="3"/><path d="M4 11h16M8 21v-4M16 21v-4"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Transport</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#3B9EEB26;">Abonnement Navegante</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#3B9EEB26;">Tickets à l'unité</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#3B9EEB26;">Train</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#3B9EEB26;">Uber / Bolt</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#3B9EEB26;">Vélo &amp; trottinette</span>
+      </div>
+    </div>
+
+    <!-- Voyages -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#EC6B9A26;color:#B8386B;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Voyages</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EC6B9A26;">Vols</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EC6B9A26;">Hébergement</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EC6B9A26;">Transport sur place</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EC6B9A26;">Repas &amp; sorties</span>
+      </div>
+    </div>
+
+    <!-- Abonnements -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#14B8C426;color:#0B7E88;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Abonnements</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#14B8C426;">Téléphone</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#14B8C426;">Streaming &amp; musique</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#14B8C426;">Applis &amp; logiciels</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#14B8C426;">Frais bancaires</span>
+      </div>
+    </div>
+
+    <!-- Santé -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#EF646126;color:#C23F3C;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-8-5.2-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.8-8 11-8 11z"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Santé</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EF646126;">Pharmacie</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EF646126;">Médecin &amp; dentiste</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#EF646126;">Assurance santé</span>
+      </div>
+    </div>
+
+    <!-- Shopping -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#D9A52130;color:#8A6A0A;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l1 13H5zM9 7a3 3 0 0 1 6 0"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Shopping</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#D9A52130;">Vêtements</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#D9A52130;">Électronique</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#D9A52130;">Cadeaux &amp; souvenirs</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#D9A52130;">Autre</span>
+      </div>
+    </div>
+
+    <!-- Divers -->
+    <div style="background:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;flex-direction:column;gap:14px;box-shadow:0 1px 2px rgba(29,27,46,0.04),0 8px 24px rgba(29,27,46,0.05);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:12px;background:#A3A1B530;color:#5E5C72;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h.01M12 12h.01M19 12h.01"/></svg></div>
+        <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Divers</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#A3A1B530;">Fournitures d'études</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#A3A1B530;">Démarches administratives</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#A3A1B530;">Imprévus</span>
+        <span style="display:flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;font-size:14px;font-weight:500;background:#A3A1B530;">Autre</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tags -->
+  <div style="background:#1D1B2E;color:#FFFFFF;border-radius:24px;padding:22px 24px;display:flex;align-items:center;gap:24px;">
+    <div style="display:flex;flex-direction:column;gap:4px;width:360px;flex:none;">
+      <div style="font-family:'Bricolage Grotesque','DM Sans',sans-serif;font-size:20px;font-weight:700;">Tags libres</div>
+      <div style="font-size:14px;color:#C9C7DB;">Ils traversent toutes les catégories. Un focus peut être une catégorie, une sous-catégorie ou un tag.</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span style="display:flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:600;background:#FFFFFF22;">#avec-amis</span>
+      <span style="display:flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:600;background:#FFFFFF22;">#soirée-esn</span>
+      <span style="display:flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:600;background:#FFFFFF22;">#petit-plaisir</span>
+      <span style="display:flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:600;background:#FFFFFF22;">#imprévu</span>
+      <span style="display:flex;align-items:center;height:34px;padding:0 14px;border-radius:999px;font-size:14px;font-weight:600;background:#FFFFFF22;">#cash</span>
+    </div>
+  </div>
+
+</div></div>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <section class="part" id="tokens">
+    <h2 class="part__title">Tokens de design</h2>
+    <p class="part__text">Les valeurs utilisées dans les maquettes, à reprendre telles quelles dans les variables CSS du projet.</p>
+    <ul class="swatches"><li class="swatch"><span class="swatch__chip" style="--swatch:#1D1B2E"></span><span class="swatch__name">Encre</span><code class="swatch__hex">#1D1B2E</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#6B6880"></span><span class="swatch__name">Texte secondaire</span><code class="swatch__hex">#6B6880</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#ECEAF3"></span><span class="swatch__name">Bordure</span><code class="swatch__hex">#ECEAF3</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#F6F5F1"></span><span class="swatch__name">Fond</span><code class="swatch__hex">#F6F5F1</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#FFFFFF"></span><span class="swatch__name">Surface</span><code class="swatch__hex">#FFFFFF</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#5B4BDB"></span><span class="swatch__name">Accent</span><code class="swatch__hex">#5B4BDB</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#F1EEFF"></span><span class="swatch__name">Accent doux</span><code class="swatch__hex">#F1EEFF</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#B23431"></span><span class="swatch__name">Danger</span><code class="swatch__hex">#B23431</code></li></ul>
+    <ul class="swatches"><li class="swatch"><span class="swatch__chip" style="--swatch:#8B7CF6"></span><span class="swatch__name">Logement</span><code class="swatch__hex">#8B7CF6</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#19A974"></span><span class="swatch__name">Courses</span><code class="swatch__hex">#19A974</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#F59E42"></span><span class="swatch__name">Activités</span><code class="swatch__hex">#F59E42</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#3B9EEB"></span><span class="swatch__name">Transport</span><code class="swatch__hex">#3B9EEB</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#EC6B9A"></span><span class="swatch__name">Voyages</span><code class="swatch__hex">#EC6B9A</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#14B8C4"></span><span class="swatch__name">Abonnements</span><code class="swatch__hex">#14B8C4</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#EF6461"></span><span class="swatch__name">Santé</span><code class="swatch__hex">#EF6461</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#D9A521"></span><span class="swatch__name">Shopping</span><code class="swatch__hex">#D9A521</code></li><li class="swatch"><span class="swatch__chip" style="--swatch:#A3A1B5"></span><span class="swatch__name">Divers</span><code class="swatch__hex">#A3A1B5</code></li></ul>
+    <div class="specimen">
+      <div class="specimen__card">
+        <div class="specimen__display">Bricolage Grotesque</div>
+        <p class="specimen__note">Titres et montants (graisses 500 à 800).</p>
+      </div>
+      <div class="specimen__card">
+        <div class="specimen__body">DM Sans : texte courant, libellés et boutons (graisses 400 à 700).</div>
+        <p class="specimen__note">Les polices se chargent depuis Google Fonts. Hors ligne, le navigateur utilise la police système.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var viewports = document.querySelectorAll('.board__viewport');
+  function fit() {
+    viewports.forEach(function (vp) {
+      var w = Number(vp.dataset.w), h = Number(vp.dataset.h);
+      var s = Math.min(1, vp.clientWidth / w);
+      var frame = vp.firstElementChild;
+      frame.style.transform = 'scale(' + s + ')';
+      vp.style.height = (h * s) + 'px';
+    });
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
+</body>
+</html>

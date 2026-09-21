@@ -1,0 +1,15 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "resolveNestedSelectors": true,
+        "message": "Utiliser la nomenclature BEM : bloc__element--modificateur"
+      }
+    ],
+    "selector-max-id": 0,
+    "max-nesting-depth": [2, { "ignoreAtRules": ["include"] }],
+    "declaration-no-important": true
+  }
+}

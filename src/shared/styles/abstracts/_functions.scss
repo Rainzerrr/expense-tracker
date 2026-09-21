@@ -1,0 +1,6 @@
+$space-unit: 4px;
+$touch-target: 44px;
+
+@function space($n) {
+  @return $n * $space-unit;
+}

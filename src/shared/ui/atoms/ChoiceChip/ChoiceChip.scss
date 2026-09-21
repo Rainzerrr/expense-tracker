@@ -1,0 +1,80 @@
+@use '@/shared/styles/abstracts' as *;
+
+.choice-chip {
+  display: inline-flex;
+  flex: none;
+  position: relative;
+
+  &__input {
+    @include visually-hidden;
+  }
+
+  &__body {
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    gap: space(2);
+    min-height: $touch-target;
+    padding-inline: space(4);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background: var(--chip-surface, var(--color-surface));
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--chip-color);
+  }
+
+  &__icon {
+    display: none;
+  }
+
+  &__input:focus-visible + &__body {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &__input:checked + &__body {
+    font-weight: 700;
+  }
+
+  &__input:checked + &__body &__icon {
+    display: inline-flex;
+  }
+
+  // Catégorie : fond et contour de la couleur de la catégorie.
+  &--tone-category &__input:checked + &__body {
+    border-color: var(--chip-color);
+    background: color-mix(in srgb, var(--chip-color) 14%, transparent);
+  }
+
+  // Sous-catégorie : pastille sombre.
+  &--tone-subcategory &__input:checked + &__body {
+    background: var(--color-ink);
+    color: var(--color-on-accent);
+  }
+
+  // Date : pastille d'accent.
+  &--tone-date &__input:checked + &__body {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  // Tag : discret tant qu'il n'est pas choisi.
+  &--tone-tag &__body {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
+
+  &--tone-tag &__input:checked + &__body {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+}

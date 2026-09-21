@@ -1,0 +1,48 @@
+@use '@/shared/styles/abstracts' as *;
+
+.history-page {
+  display: flex;
+  flex-direction: column;
+  gap: space(4);
+
+  &__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: space(4);
+  }
+
+  &__eyebrow {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__total {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+
+  // « Nouvelle dépense » : sur mobile, le bouton « + » de la barre du bas suffit.
+  &__action {
+    display: none;
+  }
+
+  @include up(lg) {
+    gap: space(6);
+
+    &__header {
+      align-items: center;
+    }
+
+    &__total {
+      margin-left: auto;
+    }
+
+    &__action {
+      display: block;
+    }
+  }
+}

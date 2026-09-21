@@ -1,0 +1,44 @@
+@use '@/shared/styles/abstracts' as *;
+
+.transfer-card {
+  &__text,
+  &__note,
+  &__status {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: space(3);
+
+    @include up(md) {
+      flex-direction: row;
+    }
+  }
+
+  &__status {
+    display: flex;
+    flex-direction: column;
+    gap: space(1);
+  }
+
+  &__ok,
+  &__error {
+    font-size: 14px;
+    font-weight: 600;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__ok {
+    color: var(--color-accent);
+  }
+
+  &__error {
+    color: var(--color-danger);
+  }
+}

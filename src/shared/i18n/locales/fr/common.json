@@ -1,0 +1,53 @@
+{
+  "app": {
+    "name": "Lisboa",
+    "tagline": "Erasmus 2026–27"
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "home": "Accueil",
+    "stats": "Stats",
+    "statsLong": "Statistiques",
+    "history": "Historique",
+    "settings": "Réglages",
+    "addExpense": "Ajouter une dépense"
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Accueil"
+    },
+    "stats": {
+      "title": "Statistiques"
+    },
+    "history": {
+      "title": "Historique"
+    },
+    "settings": {
+      "title": "Réglages"
+    },
+    "expenseCreate": {
+      "title": "Nouvelle dépense"
+    }
+  },
+  "comingSoon": {
+    "title": "Bientôt disponible",
+    "text": "Cet écran sera construit dans une prochaine étape."
+  },
+  "error": {
+    "title": "Une erreur est survenue",
+    "text": "Tes données locales ne sont pas touchées. Recharge la page pour reprendre.",
+    "retry": "Recharger",
+    "storage": {
+      "title": "Stockage indisponible",
+      "text": "Le navigateur refuse d'enregistrer les données sur cet appareil (navigation privée ?). Ouvre l'application dans une fenêtre normale."
+    }
+  },
+  "demo": {
+    "banner": "Mode démo : données fictives, tes vraies dépenses ne sont pas touchées.",
+    "exit": "Quitter la démo"
+  },
+  "relativeDay": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier"
+  }
+}

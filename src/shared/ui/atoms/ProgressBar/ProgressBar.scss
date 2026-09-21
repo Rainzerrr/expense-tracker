@@ -1,0 +1,12 @@
+.progress-bar {
+  height: 8px;
+  border-radius: 8px;
+  background: var(--color-track);
+
+  &__fill {
+    width: var(--progress);
+    height: 100%;
+    border-radius: 8px;
+    background: var(--color-accent);
+  }
+}

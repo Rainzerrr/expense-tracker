@@ -1,0 +1,50 @@
+@use '@/shared/styles/abstracts' as *;
+
+.import-card {
+  &__text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__result:empty {
+    display: none;
+  }
+
+  &__preview,
+  &__done {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+    padding: space(4);
+    border-radius: var(--radius-md);
+    background: var(--color-accent-soft);
+    font-size: 14px;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &__figures {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+    margin-top: space(2);
+
+    @include up(md) {
+      flex-direction: row;
+    }
+  }
+
+  &__error {
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}

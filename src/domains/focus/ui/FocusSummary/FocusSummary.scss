@@ -1,0 +1,61 @@
+@use '@/shared/styles/abstracts' as *;
+
+.focus-summary {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  padding: space(5);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: space(2);
+    padding: space(2) space(3);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--focus-color) 14%, transparent);
+    color: color-mix(in srgb, var(--focus-color) 70%, var(--color-ink));
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--focus-color);
+  }
+
+  &__amount {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  &__share {
+    color: var(--color-text-muted);
+    font-size: 15px;
+  }
+
+  &__tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: space(2);
+    margin-top: space(2);
+  }
+
+  // Tuiles grises sur la carte blanche.
+  // Ici la valeur passe avant son libellé (« ≈ 20 € » puis « par semaine »), contrairement au dashboard.
+  &__tiles > * {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    padding: space(3);
+    background: var(--color-ground);
+  }
+}

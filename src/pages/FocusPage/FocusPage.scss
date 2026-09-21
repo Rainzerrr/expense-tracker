@@ -1,0 +1,63 @@
+@use '@/shared/styles/abstracts' as *;
+
+.focus-page {
+  display: flex;
+  flex-direction: column;
+  gap: space(4);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: space(3);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: clamp(30px, 6vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  &__month {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: space(4);
+  }
+
+  // Desktop : synthèse et rythme à gauche, composition et entrées à droite.
+  @include up(lg) {
+    gap: space(6);
+
+    &__content {
+      display: grid;
+      grid-template-areas:
+        'summary composition'
+        'weekly entries';
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: space(6);
+      align-items: start;
+    }
+
+    &__summary {
+      grid-area: summary;
+    }
+
+    &__weekly {
+      grid-area: weekly;
+    }
+
+    &__composition {
+      grid-area: composition;
+    }
+
+    &__entries {
+      grid-area: entries;
+    }
+  }
+}

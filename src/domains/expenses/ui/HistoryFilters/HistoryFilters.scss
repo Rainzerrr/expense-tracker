@@ -1,0 +1,21 @@
+@use '@/shared/styles/abstracts' as *;
+
+.history-filters {
+  display: flex;
+  flex-direction: column;
+  gap: space(3);
+
+  &__chips {
+    @include chip-row;
+  }
+
+  // Desktop : recherche, mois et filtres sur une seule ligne.
+  @include up(lg) {
+    flex-direction: row;
+    align-items: center;
+
+    &__search {
+      flex: 0 1 320px;
+    }
+  }
+}

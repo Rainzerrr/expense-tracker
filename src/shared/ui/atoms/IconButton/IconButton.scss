@@ -1,0 +1,23 @@
+@use '@/shared/styles/abstracts' as *;
+
+.icon-button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: $touch-target;
+  height: $touch-target;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--color-text-muted);
+    box-shadow: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

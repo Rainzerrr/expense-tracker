@@ -1,0 +1,104 @@
+@use '@/shared/styles/abstracts' as *;
+
+.amount-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: space(2);
+
+  // Mobile : le libellé est lu par les lecteurs d'écran, mais pas affiché.
+  &__label {
+    @include visually-hidden;
+  }
+
+  &__box {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: space(1);
+    padding-bottom: space(1);
+    border-radius: 2px;
+    box-shadow: 0 3px 0 transparent;
+
+    &:focus-within {
+      box-shadow: 0 3px 0 var(--color-accent);
+    }
+  }
+
+  &__input {
+    // La largeur suit le texte pour que « € » reste collé au montant.
+    // Repli : `ch` = largeur d'un chiffre (les chiffres sont tabulaires).
+    width: calc(var(--amount-chars, 1) * 1ch);
+    field-sizing: content;
+    max-width: 70vw;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    caret-color: var(--color-accent);
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-align: center;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+  }
+
+  &__currency {
+    color: var(--color-text-muted);
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 700;
+    opacity: 0.6;
+  }
+
+  &__error {
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  @include up(lg) {
+    align-items: stretch;
+
+    &__label {
+      @include visually-hidden-reset;
+
+      color: var(--color-text-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    &__box {
+      justify-content: space-between;
+      padding: space(3) space(5);
+      border: 2px solid transparent;
+      border-radius: var(--radius-md);
+      background: var(--color-ground);
+      box-shadow: none;
+
+      &:focus-within {
+        border-color: var(--color-accent);
+        box-shadow: none;
+      }
+    }
+
+    &__input {
+      flex: 1;
+      width: auto;
+      max-width: none;
+      min-width: 0;
+      font-size: 36px;
+      text-align: left;
+    }
+
+    &__currency {
+      font-size: 28px;
+    }
+  }
+}

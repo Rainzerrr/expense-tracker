@@ -1,0 +1,16 @@
+@use '@/shared/styles/abstracts' as *;
+
+.heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+
+  &--size-lg {
+    font-size: clamp(30px, 6vw, 36px);
+  }
+
+  &--size-md {
+    font-size: 20px;
+  }
+}

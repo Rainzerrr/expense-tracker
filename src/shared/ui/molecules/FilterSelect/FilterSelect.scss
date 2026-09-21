@@ -1,0 +1,52 @@
+@use '@/shared/styles/abstracts' as *;
+
+.filter-select {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+
+  &__native {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+
+    // 16 px minimum : en dessous, iOS zoome la page à l'ouverture.
+    font-size: 16px;
+  }
+
+  &__face {
+    display: inline-flex;
+    align-items: center;
+    gap: space(2);
+    min-height: $touch-target;
+    padding-inline: space(4);
+    border-radius: 999px;
+
+    // Même fond que les pastilles : la couleur change selon le conteneur (blanc, ou gris dans un panneau).
+    background: var(--chip-surface, var(--color-surface));
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__native:focus-visible + &__face {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &--tone-strong &__face {
+    background: var(--color-ink);
+    color: var(--color-on-accent);
+    font-weight: 700;
+  }
+
+  &--active &__face {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+}

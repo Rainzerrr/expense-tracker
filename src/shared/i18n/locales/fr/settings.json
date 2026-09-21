@@ -1,0 +1,71 @@
+{
+  "page": {
+    "title": "Réglages"
+  },
+  "data": {
+    "title": "Mes données",
+    "intro": "Tes dépenses sont enregistrées uniquement sur cet appareil. Pour les retrouver sur ton Mac, envoie-les par AirDrop.",
+    "demoNotice": "Indisponible en mode démo : ces données sont fictives.",
+    "status": {
+      "never": "Aucune sauvegarde pour l'instant.",
+      "lastExport": "Dernier envoi ou téléchargement : {{date}}.",
+      "lastImport": "Dernier import : {{date}}."
+    },
+    "transfer": {
+      "title": "Envoyer vers un autre appareil",
+      "text": "Crée un fichier avec toutes tes dépenses et envoie-le par AirDrop, Messages ou Mail. Sur le Mac, ouvre-le dans Réglages.",
+      "share": "Envoyer (AirDrop…)",
+      "download": "Télécharger le fichier",
+      "downloaded": "Fichier téléchargé : {{name}}.",
+      "shared": "Fichier envoyé.",
+      "error": "Le fichier n'a pas pu être créé. Réessaie."
+    },
+    "receive": {
+      "title": "Recevoir des données",
+      "text": "Ouvre le fichier reçu d'un autre appareil. Il est fusionné avec les données d'ici : rien n'est supprimé, une dépense n'est remplacée que par une version plus récente.",
+      "choose": "Choisir un fichier",
+      "drop": "ou dépose-le ici",
+      "reading": "Lecture du fichier…"
+    },
+    "preview": {
+      "title": "Ce que l'import va faire",
+      "file": "Fichier créé le {{date}}.",
+      "summary": "Nouvelles : {{added}} · Modifiées : {{updated}} · Supprimées : {{deleted}}",
+      "upToDate": "Cet appareil est déjà à jour : il n'y a rien à importer.",
+      "skipped_one": "{{count}} dépense ignorée (catégorie introuvable).",
+      "skipped_other": "{{count}} dépenses ignorées (catégorie introuvable).",
+      "confirm": "Fusionner",
+      "cancel": "Annuler"
+    },
+    "done": {
+      "title": "Import terminé",
+      "summary": "Nouvelles : {{added}} · Modifiées : {{updated}} · Supprimées : {{deleted}}"
+    },
+    "errors": {
+      "notJson": "Ce fichier n'est pas lisible : ce n'est pas une sauvegarde.",
+      "notABackup": "Ce fichier ne vient pas de cette application.",
+      "newerVersion": "Ce fichier vient d'une version plus récente de l'application. Mets l'application à jour, puis réessaie.",
+      "invalid": "Ce fichier est abîmé ou incomplet. Rien n'a été importé.",
+      "tooLarge": "Ce fichier est beaucoup trop gros pour être une sauvegarde.",
+      "readFailed": "Le fichier n'a pas pu être lu. Réessaie."
+    },
+    "csv": {
+      "title": "Exporter pour un tableur",
+      "text": "Un fichier CSV avec une ligne par dépense (date, montant, catégorie, sous-catégorie, tags), à ouvrir dans Excel ou Numbers.",
+      "download": "Télécharger le CSV",
+      "done": "Fichier téléchargé : {{name}}.",
+      "error": "Le fichier n'a pas pu être créé. Réessaie.",
+      "header": {
+        "date": "Date",
+        "amount": "Montant (€)",
+        "category": "Catégorie",
+        "subcategory": "Sous-catégorie",
+        "tags": "Tags"
+      }
+    },
+    "reminder": {
+      "message": "Tes dernières dépenses ne sont sauvegardées nulle part depuis {{days}} jours.",
+      "action": "Sauvegarder"
+    }
+  }
+}

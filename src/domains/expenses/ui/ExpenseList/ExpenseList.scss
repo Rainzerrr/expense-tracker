@@ -1,0 +1,315 @@
+@use '@/shared/styles/abstracts' as *;
+
+$columns: 130px minmax(120px, 240px) minmax(0, 1fr) 170px 110px;
+
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: space(3);
+
+  // Les en-têtes de colonnes n'existent que dans le tableau.
+  &__columns {
+    display: none;
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+  }
+
+  &__day-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-inline: space(2);
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__day-title {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  &__day-total {
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__items {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  @include up(lg) {
+    gap: 0;
+    padding: space(2) space(3) space(3);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+
+    &__columns {
+      display: grid;
+      grid-template-columns: $columns;
+      align-items: center;
+      padding: space(4) space(4) space(3);
+      color: var(--color-text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    // Colonnes du tableau : 1 date, 2-3 dépense (libellé + catégorie), 4 tag, 5 montant.
+    &__columns > :nth-child(2) {
+      grid-column: 2 / span 2;
+    }
+
+    &__columns > :nth-child(3) {
+      grid-column: 4;
+    }
+
+    &__column-amount {
+      grid-column: 5;
+      text-align: right;
+    }
+
+    // Une seule liste : les jours n'ont plus d'en-tête, leurs lignes se suivent.
+    &__day {
+      display: contents;
+    }
+
+    &__day-header {
+      display: none;
+    }
+
+    &__items {
+      overflow: visible;
+      border-radius: 0;
+      background: none;
+      box-shadow: none;
+    }
+  }
+}
+
+.expense-list-row {
+  border-top: 1px solid var(--color-border);
+
+  li:first-child > & {
+    border-top: 0;
+  }
+
+  // Mobile : la ligne glisse vers la gauche et révèle ses actions (défilement natif à aimants).
+  &__swipe {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__main {
+    display: flex;
+    flex: 0 0 100%;
+    align-items: center;
+    gap: space(3);
+    min-height: 64px;
+    padding: space(3) space(4);
+    scroll-snap-align: start;
+
+    &:focus-visible {
+      outline-offset: -3px;
+    }
+  }
+
+  &__date,
+  &__dot,
+  &__no-tag {
+    display: none;
+  }
+
+  &__icon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--row-color) 14%, transparent);
+    color: color-mix(in srgb, var(--row-color) 80%, var(--color-ink));
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    display: flex;
+    gap: space(1);
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+
+  &__tags {
+    display: inline-flex;
+    gap: space(1);
+    color: var(--color-accent);
+    font-weight: 600;
+
+    &::before {
+      content: '·';
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__amount {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+
+  &__actions {
+    display: flex;
+    flex: none;
+    scroll-snap-align: end;
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: space(1);
+    width: 76px;
+    border: 0;
+    color: var(--color-on-accent);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+
+    &--edit {
+      background: var(--category-transport);
+    }
+
+    &--delete {
+      background: var(--color-danger);
+    }
+  }
+
+  &--selected {
+    background: var(--color-accent-soft);
+  }
+
+  @include up(lg) {
+    border-top: 0;
+    border-radius: var(--radius-md);
+
+    &__swipe {
+      overflow: visible;
+    }
+
+    // Tableau : Date | Dépense (pastille + libellé) | Catégorie | Tag | Montant.
+    &__main {
+      display: grid;
+      grid-template-columns: $columns;
+      align-items: center;
+      min-height: 56px;
+      padding: space(2) space(4);
+
+      // Le corps et la ligne d'infos rejoignent la grille : libellé, catégorie et tags ont leur colonne.
+      @include hover {
+        background: var(--color-ground);
+      }
+    }
+
+    &__body,
+    &__meta {
+      display: contents;
+    }
+
+    // Placement explicite : une ligne sans tag garde son montant dans la dernière colonne.
+    &__date {
+      display: block;
+      grid-column: 1;
+      color: var(--color-text-secondary);
+      font-size: 15px;
+    }
+
+    &__icon {
+      display: none;
+    }
+
+    &__dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: space(2);
+      border-radius: 50%;
+      background: var(--row-color);
+    }
+
+    &__label {
+      grid-column: 2;
+      font-size: 16px;
+    }
+
+    &__category {
+      grid-column: 3;
+      color: var(--color-text-muted);
+      font-size: 14px;
+    }
+
+    &__no-tag {
+      display: block;
+      grid-column: 4;
+      color: var(--color-text-muted);
+    }
+
+    &__tags {
+      grid-column: 4;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &__tag {
+      padding: space(1) space(3);
+      border-radius: 999px;
+      background: var(--color-accent-soft);
+    }
+
+    &__amount {
+      grid-column: 5;
+      text-align: right;
+    }
+
+    // Sur grand écran on modifie en cliquant la ligne : les actions au glissement disparaissent.
+    &__actions {
+      display: none;
+    }
+
+    &--selected &__main {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+      border-radius: var(--radius-md);
+    }
+  }
+}

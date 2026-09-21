@@ -1,0 +1,91 @@
+{
+  "housing": {
+    "label": "Logement",
+    "sub": {
+      "rent": "Loyer",
+      "utilities": "Charges",
+      "deposit": "Caution",
+      "homeEquipment": "Équipement maison"
+    }
+  },
+  "groceries": {
+    "label": "Courses",
+    "sub": {
+      "meat": "Viande",
+      "fish": "Poisson",
+      "fruitsVegetables": "Fruits & légumes",
+      "bakery": "Boulangerie",
+      "dairyEggs": "Produits laitiers & œufs",
+      "staples": "Épicerie",
+      "drinks": "Boissons",
+      "snacks": "Snacks",
+      "hygiene": "Hygiène & entretien"
+    }
+  },
+  "activities": {
+    "label": "Activités",
+    "sub": {
+      "restaurants": "Restaurants",
+      "cafes": "Cafés",
+      "bars": "Bars & soirées",
+      "excursions": "Excursions",
+      "culture": "Culture & visites",
+      "sports": "Sport & loisirs",
+      "esnEvents": "Événements ESN"
+    }
+  },
+  "transport": {
+    "label": "Transport",
+    "sub": {
+      "navegante": "Abonnement Navegante",
+      "singleTickets": "Tickets à l'unité",
+      "train": "Train",
+      "rideshare": "Uber / Bolt",
+      "bikeScooter": "Vélo & trottinette"
+    }
+  },
+  "travel": {
+    "label": "Voyages",
+    "sub": {
+      "flights": "Vols",
+      "lodging": "Hébergement",
+      "localTransport": "Transport sur place",
+      "mealsOutings": "Repas & sorties"
+    }
+  },
+  "subscriptions": {
+    "label": "Abonnements",
+    "sub": {
+      "phone": "Téléphone",
+      "streaming": "Streaming & musique",
+      "apps": "Applis & logiciels",
+      "bankFees": "Frais bancaires"
+    }
+  },
+  "health": {
+    "label": "Santé",
+    "sub": {
+      "pharmacy": "Pharmacie",
+      "doctor": "Médecin & dentiste",
+      "healthInsurance": "Assurance santé"
+    }
+  },
+  "shopping": {
+    "label": "Shopping",
+    "sub": {
+      "clothes": "Vêtements",
+      "electronics": "Électronique",
+      "gifts": "Cadeaux & souvenirs",
+      "other": "Autre"
+    }
+  },
+  "misc": {
+    "label": "Divers",
+    "sub": {
+      "studySupplies": "Fournitures d'études",
+      "admin": "Démarches administratives",
+      "unexpected": "Imprévus",
+      "other": "Autre"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+@use '@/shared/styles/abstracts' as *;
+
+.expense-row {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  min-height: $touch-target;
+
+  &__icon {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--row-color) 14%, transparent);
+    color: color-mix(in srgb, var(--row-color) 80%, var(--color-ink));
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+
+  &__amount {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+  }
+}

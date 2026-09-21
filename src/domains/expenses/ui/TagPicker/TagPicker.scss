@@ -1,0 +1,51 @@
+@use '@/shared/styles/abstracts' as *;
+
+.tag-picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &__legend {
+    margin-bottom: space(2);
+    padding: 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__options {
+    @include chip-row;
+
+    align-items: center;
+  }
+
+  &__add,
+  &__input {
+    flex: none;
+    min-height: $touch-target;
+    border: 2px dashed var(--color-text-muted);
+    border-radius: 999px;
+    background: transparent;
+    font-size: 15px;
+  }
+
+  &__add {
+    display: inline-flex;
+    align-items: center;
+    gap: space(1);
+    padding-inline: space(4);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  &__input {
+    width: 160px;
+    padding-inline: space(4);
+    border-color: var(--color-accent);
+
+    // 16 px minimum : en dessous, iOS zoome la page au focus.
+    font-size: 16px;
+  }
+}

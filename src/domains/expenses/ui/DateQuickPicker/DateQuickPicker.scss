@@ -1,0 +1,57 @@
+@use '@/shared/styles/abstracts' as *;
+
+.date-quick-picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &__legend {
+    margin-bottom: space(2);
+    padding: 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__options {
+    @include chip-row;
+
+    align-items: center;
+  }
+
+  // Le champ date natif : caché sur mobile tant que « Autre date » n'est pas choisi.
+  &__input {
+    display: none;
+    order: 1;
+    min-height: $touch-target;
+    padding-inline: space(3);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+
+    &--visible {
+      display: block;
+    }
+  }
+
+  &__error {
+    margin-top: space(2);
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  @include up(lg) {
+    &__input {
+      display: block;
+      order: -1;
+      background: var(--color-surface);
+    }
+
+    // « Autre date » n'a plus de raison d'être : le champ est déjà là.
+    &__other {
+      display: none;
+    }
+  }
+}

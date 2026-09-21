@@ -1,0 +1,40 @@
+@use '@/shared/styles/abstracts' as *;
+
+.month-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: space(4);
+
+  &__eyebrow {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: space(3);
+  }
+
+  &__nav {
+    display: flex;
+    gap: space(2);
+  }
+
+  // Sur grand écran la progression du séjour est dans la barre latérale, et « + » dans l'en-tête.
+  &__action {
+    display: none;
+  }
+
+  @include up(lg) {
+    &__eyebrow {
+      display: none;
+    }
+
+    &__action {
+      display: block;
+    }
+  }
+}

@@ -1,0 +1,51 @@
+@use '@/shared/styles/abstracts' as *;
+
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: space(4);
+
+  // En-tête : le rappel de sauvegarde (quand il y en a un) au-dessus du titre du mois.
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: space(4);
+  }
+
+  // Desktop : les graphiques côte à côte, la liste des dépenses en dessous.
+  @include up(lg) {
+    display: grid;
+    grid-template-areas:
+      'header header'
+      'summary summary'
+      'rhythm breakdown'
+      'focus focus'
+      'recent recent';
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: space(6);
+
+    &__header {
+      grid-area: header;
+    }
+
+    &__summary {
+      grid-area: summary;
+    }
+
+    &__rhythm {
+      grid-area: rhythm;
+    }
+
+    &__breakdown {
+      grid-area: breakdown;
+    }
+
+    &__focus {
+      grid-area: focus;
+    }
+
+    &__recent {
+      grid-area: recent;
+    }
+  }
+}

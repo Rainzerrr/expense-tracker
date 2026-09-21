@@ -1,0 +1,52 @@
+@use '@/shared/styles/abstracts' as *;
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: space(7);
+  height: 100%;
+  padding: space(7) space(4) space(6);
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: space(3);
+    padding-inline: space(2);
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  &__title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  &__subtitle {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: space(1);
+  }
+
+  &__footer {
+    margin-top: auto;
+    padding: space(4);
+    border-radius: var(--radius-lg);
+    background: var(--color-ground);
+  }
+}

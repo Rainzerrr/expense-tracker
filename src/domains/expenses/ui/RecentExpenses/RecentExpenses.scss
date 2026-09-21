@@ -1,0 +1,9 @@
+@use '@/shared/styles/abstracts' as *;
+
+.recent-expenses {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: space(3);
+  }
+}

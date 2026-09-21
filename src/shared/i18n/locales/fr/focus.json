@@ -1,0 +1,80 @@
+{
+  "page": {
+    "title": "Focus",
+    "back": "Retour au tableau de bord"
+  },
+  "cards": {
+    "title": "Mes focus",
+    "manage": "Gérer",
+    "wholeCategory": "Catégorie entière",
+    "tag": "Tag",
+    "perWeek": "≈ {{amount}} par semaine",
+    "empty": {
+      "title": "Aucun focus",
+      "text": "Épingle une catégorie, une sous-catégorie ou un tag pour suivre de près ce qu'il te coûte (la viande, les sorties…).",
+      "action": "Ajouter un focus"
+    }
+  },
+  "switcher": {
+    "label": "Mes focus",
+    "add": "Nouveau"
+  },
+  "summary": {
+    "share": "soit {{percent}} % de tes dépenses de {{month}}",
+    "shareLessThanOne": "soit moins de 1 % de tes dépenses de {{month}}",
+    "perWeek": "par semaine",
+    "purchases_one": "achat",
+    "purchases_other": "achats",
+    "averageBasket": "panier moyen",
+    "approximately": "≈ {{amount}}"
+  },
+  "weekly": {
+    "title": "Semaine par semaine",
+    "range": "{{start}}–{{end}} {{month}}",
+    "current": "{{start}}–{{end}}, en cours"
+  },
+  "composition": {
+    "inParent": "Dans tes {{category}}",
+    "parentTotal": "{{amount}} au total ce mois-ci",
+    "rest": "Le reste",
+    "bySubcategory": "Répartition par sous-catégorie",
+    "byCategory": "Répartition par catégorie",
+    "withoutSubcategory": "Sans sous-catégorie",
+    "others": "Autres",
+    "barLabel": "Répartition en parts",
+    "percent": "{{value}} %"
+  },
+  "entries": {
+    "title": "Dernières entrées",
+    "seeAll_one": "Voir l'entrée",
+    "seeAll_other": "Voir les {{count}} entrées",
+    "empty": "Aucune dépense dans ce focus ce mois-ci."
+  },
+  "empty": {
+    "title": "Aucun focus épinglé",
+    "text": "Ajoute-en un pour voir ici le détail : rythme, semaine par semaine, dernières entrées.",
+    "action": "Ajouter un focus"
+  },
+  "manager": {
+    "title": "Mes focus",
+    "current": "Focus épinglés",
+    "none": "Aucun focus pour l'instant.",
+    "moveUp": "Monter {{name}}",
+    "moveDown": "Descendre {{name}}",
+    "remove": "Retirer {{name}}",
+    "add": {
+      "title": "Ajouter un focus",
+      "kind": "Ce que tu veux suivre",
+      "kinds": {
+        "category": "Catégorie",
+        "subcategory": "Sous-catégorie",
+        "tag": "Tag"
+      },
+      "choose": "Choisir…",
+      "select": "Élément à suivre",
+      "submit": "Épingler",
+      "allPinned": "Tout est déjà épinglé."
+    },
+    "done": "Terminé"
+  }
+}

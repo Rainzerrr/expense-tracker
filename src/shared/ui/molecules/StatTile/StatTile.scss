@@ -1,0 +1,47 @@
+@use '@/shared/styles/abstracts' as *;
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: space(1);
+  padding: space(4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+
+  &__label {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  &__hint {
+    color: var(--color-text-muted);
+    font-size: 12px;
+  }
+
+  &--tone-accent {
+    background: var(--color-accent-soft);
+  }
+
+  &--tone-success {
+    background: var(--color-success-soft);
+  }
+
+  &--tone-dark {
+    background: var(--color-ink);
+    color: var(--color-on-accent);
+
+    .stat-tile__label,
+    .stat-tile__hint {
+      color: color-mix(in srgb, var(--color-on-accent) 70%, transparent);
+    }
+  }
+}

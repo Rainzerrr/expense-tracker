@@ -1,0 +1,99 @@
+@use '@/shared/styles/abstracts' as *;
+
+.focus-manager {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: space(6);
+    min-height: 0;
+    padding: space(2) space(4) space(4);
+    overflow-y: auto;
+
+    @include up(lg) {
+      padding-inline: space(8);
+    }
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: space(3);
+  }
+
+  &__heading {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__empty {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: space(3);
+    padding: space(2) space(2) space(2) space(4);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+
+    @include up(lg) {
+      background: var(--color-ground);
+    }
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__subtitle {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+
+  &__actions {
+    display: flex;
+    flex: none;
+    gap: space(1);
+  }
+
+  &__add {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: space(3);
+  }
+
+  &__footer {
+    padding: space(2) space(4) calc(#{space(4)} + env(safe-area-inset-bottom));
+
+    @include up(lg) {
+      padding: space(4) space(8) space(8);
+      border-top: 1px solid var(--color-border);
+    }
+  }
+}

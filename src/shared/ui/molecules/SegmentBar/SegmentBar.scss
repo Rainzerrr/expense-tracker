@@ -1,0 +1,19 @@
+.segment-bar {
+  display: flex;
+  gap: 3px;
+  height: 14px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: var(--color-track);
+
+  &__part {
+    flex-basis: 0;
+    min-width: 6px;
+    border-radius: 7px;
+    background: color-mix(in srgb, var(--part-color) 30%, transparent);
+
+    &--emphasis {
+      background: var(--part-color);
+    }
+  }
+}

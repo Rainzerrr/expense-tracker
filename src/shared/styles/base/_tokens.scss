@@ -1,0 +1,43 @@
+// Variables CSS globales, émises une seule fois (importées par main.scss uniquement).
+:root {
+  color-scheme: light;
+
+  // Couleurs de base
+  --color-ink: #1d1b2e;
+  --color-text-secondary: #4a4760;
+  --color-text-muted: #6b6880;
+  --color-border: #eceaf3;
+  --color-track: #e3e0ee;
+  --color-ground: #f6f5f1;
+  --color-surface: #fff;
+  --color-accent: #5b4bdb;
+  --color-accent-soft: #f1eeff;
+  --color-on-accent: #fff;
+  --color-danger: #b23431;
+  --color-danger-soft: #fbeceb;
+  --color-success-soft: #e8f6f0;
+  --color-scrim: rgb(29 27 46 / 40%);
+
+  // Une couleur par catégorie
+  --category-housing: #8b7cf6;
+  --category-groceries: #19a974;
+  --category-activities: #f59e42;
+  --category-transport: #3b9eeb;
+  --category-travel: #ec6b9a;
+  --category-subscriptions: #14b8c4;
+  --category-health: #ef6461;
+  --category-shopping: #d9a521;
+  --category-misc: #a3a1b5;
+
+  // Formes et ombres
+  --radius-sm: 14px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 28px;
+  --shadow-card: 0 1px 2px rgb(29 27 46 / 4%), 0 8px 24px rgb(29 27 46 / 5%);
+  --shadow-fab: 0 8px 20px color-mix(in srgb, var(--color-accent) 35%, transparent);
+
+  // Typographie (polices auto-hébergées, voir main.tsx)
+  --font-display: 'Bricolage Grotesque Variable', 'DM Sans Variable', system-ui, sans-serif;
+  --font-body: 'DM Sans Variable', system-ui, sans-serif;
+}

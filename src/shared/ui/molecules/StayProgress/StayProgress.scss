@@ -1,0 +1,28 @@
+@use '@/shared/styles/abstracts' as *;
+
+.stay-progress {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    gap: space(3);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__day,
+  &__range {
+    color: var(--color-text-muted);
+  }
+
+  &__day {
+    font-weight: 500;
+  }
+
+  &__range {
+    font-size: 12px;
+  }
+}

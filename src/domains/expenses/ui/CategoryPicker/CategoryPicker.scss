@@ -1,0 +1,32 @@
+@use '@/shared/styles/abstracts' as *;
+
+.category-picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  &__legend {
+    margin-bottom: space(2);
+    padding: 0;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__options {
+    @include chip-row;
+
+    @include up(lg) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__error {
+    margin-top: space(2);
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}

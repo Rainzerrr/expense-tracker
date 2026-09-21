@@ -1,0 +1,1 @@
+export { DexieCatalogRepository } from './DexieCatalogRepository';

@@ -1,0 +1,76 @@
+@use '@/shared/styles/abstracts' as *;
+
+.undo-toast {
+  display: flex;
+  align-items: center;
+  gap: space(3);
+  min-height: 52px;
+  padding: 0 space(2) 0 space(4);
+  border-radius: var(--radius-md);
+  background: var(--color-ink);
+  color: var(--color-on-accent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--color-ink) 30%, transparent);
+  font-size: 15px;
+  font-weight: 500;
+
+  &__viewport {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    // Au-dessus de la barre du bas (mobile) et des panneaux.
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    padding: space(4) space(4) calc(#{space(24)} + env(safe-area-inset-bottom));
+    outline: none;
+    list-style: none;
+    pointer-events: none;
+
+    // Les enfants seuls captent les clics : la zone vide ne bloque pas la page.
+    > * {
+      pointer-events: auto;
+    }
+  }
+
+  &__message {
+    flex: 1;
+  }
+
+  &__action {
+    display: inline-flex;
+    align-items: center;
+    min-height: $touch-target;
+    padding-inline: space(3);
+    border: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-accent) 40%, var(--color-on-accent));
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  &__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $touch-target;
+    height: $touch-target;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+  }
+
+  @include up(lg) {
+    // Desktop : en bas à droite, hors de la barre latérale.
+    &__viewport {
+      right: 0;
+      left: auto;
+      padding: space(6);
+      width: 420px;
+    }
+  }
+}

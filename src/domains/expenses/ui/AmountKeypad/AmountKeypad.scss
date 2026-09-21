@@ -1,0 +1,33 @@
+@use '@/shared/styles/abstracts' as *;
+
+.amount-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: space(2);
+
+  &__key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:active {
+      background: var(--color-accent-soft);
+    }
+
+    &--action {
+      background: var(--color-border);
+    }
+  }
+
+  @include up(lg) {
+    display: none;
+  }
+}
