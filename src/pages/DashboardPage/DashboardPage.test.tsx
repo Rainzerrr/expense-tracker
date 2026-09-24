@@ -111,4 +111,58 @@ describe('dashboard sans aucune dépense (usage réel, premier lancement)', () =
     expect(summary).toHaveTextContent('0,00 €');
     expect(await screen.findByText('Aucune dépense ce mois-ci')).toBeInTheDocument();
   });
+
+  it('le budget par défaut affiche 0 € dépensé sur chaque ligne', async () => {
+    await renderDashboard();
+    const budget = await screen.findByRole('region', { name: 'Budget du mois' });
+    expect(budget).toHaveTextContent('0,00 € sur 1 000,00 €');
+    expect(budget).toHaveTextContent('0,00 € sur 400,00 €');
+    expect(budget).toHaveTextContent('0,00 € sur 1 400,00 €');
+  });
+});
+
+// Chiffres exacts du jeu de démo au 20 septembre 2026 : 420 € de loyer, 341,70 € courses + activités, 970 € au total.
+describe('budget du mois (démo, 20 septembre 2026)', () => {
+  it('affiche les trois lignes avec ce qu’il reste, sans dépassement', async () => {
+    await renderDashboard({ search: '?demo=1' });
+    const budget = await screen.findByRole('region', { name: 'Budget du mois' });
+
+    expect(budget).toHaveTextContent('Logement');
+    expect(budget).toHaveTextContent('420,00 € sur 1 000,00 €');
+    expect(budget).toHaveTextContent('il reste 580,00 €');
+
+    expect(budget).toHaveTextContent('Courses + Activités');
+    expect(budget).toHaveTextContent('341,70 € sur 400,00 €');
+    expect(budget).toHaveTextContent('il reste 58,30 €');
+
+    expect(budget).toHaveTextContent('Total du mois');
+    expect(budget).toHaveTextContent('970,00 € sur 1 400,00 €');
+    expect(budget).toHaveTextContent('il reste 430,00 €');
+
+    expect(within(budget).queryByText(/dépassé/)).not.toBeInTheDocument();
+  });
+
+  it('mène au réglage du budget', async () => {
+    const user = userEvent.setup();
+    await renderDashboard({ search: '?demo=1' });
+    const budget = await screen.findByRole('region', { name: 'Budget du mois' });
+    await user.click(within(budget).getByRole('link', { name: 'Régler' }));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Réglages' })).toBeInTheDocument();
+  });
+
+  it('signale un dépassement du budget souple sans alarmer, et un dépassement du total comme le vrai risque', async () => {
+    const services = await renderDashboard({ search: '?demo=1' });
+    // On pousse les courses + activités et le total au-delà de l'objectif.
+    await services.budget.set({
+      housingCents: 100000 as never,
+      flexCents: 1000 as never,
+      totalCents: 10000 as never,
+      updatedAt: '2026-09-01T00:00:00.000Z' as never,
+    });
+    const budget = await screen.findByRole('region', { name: 'Budget du mois' });
+
+    expect(await within(budget).findByText(/dépassé de 331,70 €/)).toBeInTheDocument();
+    expect(within(budget).getByText(/objectif souple/)).toBeInTheDocument();
+    expect(within(budget).getByText(/dépassé de 870,00 €/)).toBeInTheDocument();
+  });
 });

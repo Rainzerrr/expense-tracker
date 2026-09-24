@@ -1,0 +1,79 @@
+@use '@/shared/styles/abstracts' as *;
+
+.budget-settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: space(4);
+
+  &__text {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+  }
+
+  &__label {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: $touch-target;
+    padding-inline: space(4);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--color-ground);
+    color: var(--color-text-muted);
+
+    &:focus-within {
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--color-ink);
+
+    // 16 px minimum : en dessous, iOS zoome la page au focus.
+    font-size: 16px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+    align-items: flex-start;
+  }
+
+  &__status,
+  &__error {
+    font-size: 14px;
+    font-weight: 600;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__status {
+    color: var(--color-accent);
+  }
+
+  &__error {
+    color: var(--color-danger);
+  }
+}

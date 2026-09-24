@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Pleine page : c'est le système (iOS, Android) qui arrondit les coins. Le pictogramme (24 × 24, agrandi ×13,33) reste dans la zone sûre centrale ;
+       l'épaisseur du trait est exprimée dans son repère d'origine, donc agrandie avec lui. -->
+  <rect width="512" height="512" fill="#5b4bdb"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" transform="translate(96 96) scale(13.33)">
+    <path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>
+  </g>
+</svg>

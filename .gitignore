@@ -3,3 +3,7 @@ dist
 coverage
 .DS_Store
 *.local
+
+# Relevés bancaires réels : données personnelles, jamais dans git
+account-statement_*.csv
+*.statement.csv

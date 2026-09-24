@@ -9,4 +9,14 @@
     border-radius: 8px;
     background: var(--color-accent);
   }
+
+  // Dépassement sans gravité (ex. courses + activités) : un ton plus doux que le rouge.
+  &--tone-warning &__fill {
+    background: var(--category-activities);
+  }
+
+  // Dépassement de l'objectif qui compte vraiment (le total du mois).
+  &--tone-danger &__fill {
+    background: var(--color-danger);
+  }
 }

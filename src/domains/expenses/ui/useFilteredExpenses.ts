@@ -34,6 +34,7 @@ export function useFilteredExpenses(
         ...(subcategory ? [labels.subcategory(subcategory)] : []),
         ...tags,
         amountText(expense.amount),
+        ...(expense.note ? [expense.note] : []),
       ];
     });
   }, [expenses, catalog, categoryId, tagId, query, labels]);

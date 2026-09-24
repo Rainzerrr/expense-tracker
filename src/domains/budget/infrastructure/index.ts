@@ -1,0 +1,1 @@
+export { DexieBudgetRepository } from './DexieBudgetRepository';

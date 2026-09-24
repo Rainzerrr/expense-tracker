@@ -7,7 +7,7 @@ import { expensesToCsv } from './expenseCsv';
 const BOM = String.fromCharCode(0xfeff);
 const catalog = buildDefaultCatalog();
 const labels = {
-  header: ['Date', 'Montant', 'Catégorie', 'Sous-catégorie', 'Tags'],
+  header: ['Date', 'Montant', 'Catégorie', 'Sous-catégorie', 'Tags', 'Note'],
   category: (c: { id: string }) => (c.id === 'groceries' ? 'Courses' : c.id),
   subcategory: (s: { id: string }) => (s.id === 'groceries.meat' ? 'Viande' : s.id),
   tag: (t: { name: string }) => `#${t.name}`,
@@ -44,9 +44,9 @@ describe('expensesToCsv', () => {
       labels,
     );
     expect(csv).toBe(
-      `${BOM}Date;Montant;Catégorie;Sous-catégorie;Tags\r\n` +
-        '2026-09-19;18,50;Courses;Viande;#avec-amis #cash\r\n' +
-        '2026-09-20;12,40;Courses;Viande;\r\n',
+      `${BOM}Date;Montant;Catégorie;Sous-catégorie;Tags;Note\r\n` +
+        '2026-09-19;18,50;Courses;Viande;#avec-amis #cash;\r\n' +
+        '2026-09-20;12,40;Courses;Viande;;\r\n',
     );
   });
 
@@ -65,12 +65,12 @@ describe('expensesToCsv', () => {
       catalog,
       labels,
     );
-    expect(csv).toContain('2026-09-20;5,00;Courses;;');
+    expect(csv).toContain('2026-09-20;5,00;Courses;;;');
   });
 
   it('sans dépense, ne contient que l’en-tête', () => {
     expect(expensesToCsv([], catalog, labels)).toBe(
-      `${BOM}Date;Montant;Catégorie;Sous-catégorie;Tags\r\n`,
+      `${BOM}Date;Montant;Catégorie;Sous-catégorie;Tags;Note\r\n`,
     );
   });
 });

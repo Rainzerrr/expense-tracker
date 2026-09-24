@@ -15,6 +15,11 @@ export interface ExpenseRepository {
   findByMonth(month: YearMonth): Promise<Expense[]>;
   /** Dépenses non supprimées entre deux dates (incluses), de la plus récente à la plus ancienne. */
   findBetween(from: LocalDate, to: LocalDate): Promise<Expense[]>;
+  /**
+   * Références d'origine de toutes les dépenses importées, supprimées comprises : une dépense
+   * supprimée par l'utilisateur ne doit pas revenir à un nouvel import.
+   */
+  externalRefs(): Promise<Set<string>>;
   /** Vrai si aucune dépense n'a jamais été enregistrée (supprimées comprises). */
   isEmpty(): Promise<boolean>;
 }

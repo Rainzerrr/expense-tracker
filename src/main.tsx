@@ -7,6 +7,7 @@ import { AppServicesProvider } from '@/app/AppServices';
 import { bootstrap } from '@/app/bootstrap';
 import { StorageError } from '@/app/StorageError';
 import '@/shared/i18n';
+import { requestPersistentStorage } from '@/shared/infrastructure/persistentStorage';
 import '@/shared/styles/main.scss';
 
 const container = document.getElementById('root');
@@ -24,6 +25,8 @@ function safeSessionStorage() {
 
 bootstrap({ search: window.location.search, storage: safeSessionStorage() })
   .then((services) => {
+    // Demande au navigateur de ne pas effacer les données quand il manque de place (sans effet s'il refuse).
+    void requestPersistentStorage();
     root.render(
       <StrictMode>
         <AppServicesProvider value={services}>

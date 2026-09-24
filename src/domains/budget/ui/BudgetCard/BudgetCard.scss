@@ -1,0 +1,37 @@
+@use '@/shared/styles/abstracts' as *;
+
+.budget-card {
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: space(4);
+  }
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+  }
+
+  &__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: space(3);
+    font-size: 14px;
+  }
+
+  &__label {
+    font-weight: 700;
+  }
+
+  &__figures {
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__hint {
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+}

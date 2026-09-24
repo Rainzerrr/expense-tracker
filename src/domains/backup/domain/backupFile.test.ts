@@ -113,11 +113,11 @@ describe('parseBackup', () => {
     const extended = {
       ...file,
       futureField: 1,
-      data: { ...file.data, expenses: [{ ...expense, note: 'x' }] },
+      data: { ...file.data, expenses: [{ ...expense, champInconnu: 'x' }] },
     };
     const result = parseBackup(text(extended));
     expect(result.ok).toBe(true);
-    if (result.ok) expect(result.file.data.expenses[0]).not.toHaveProperty('note');
+    if (result.ok) expect(result.file.data.expenses[0]).not.toHaveProperty('champInconnu');
   });
 });
 
@@ -173,6 +173,83 @@ describe('focus dans le fichier', () => {
       },
     };
     expect(parseBackup(text(broken))).toEqual({ ok: false, error: 'invalid' });
+  });
+});
+
+describe('budget dans le fichier', () => {
+  it('exporte et relit le budget', () => {
+    const budget = {
+      housingCents: 100000,
+      flexCents: 40000,
+      totalCents: 140000,
+      updatedAt: '2026-09-20T10:00:00.000Z',
+    };
+    const result = parseBackup(serializeBackup(createBackupFile({ ...sample(), budget } as never)));
+    expect(result.ok && result.file.data.budget).toEqual(budget);
+  });
+
+  it('un ancien fichier sans budget se relit comme « jamais réglé »', () => {
+    const file = valid();
+    const oldData = Object.fromEntries(
+      Object.entries(file.data).filter(([section]) => section !== 'budget'),
+    );
+    const result = parseBackup(text({ ...file, data: oldData }));
+    expect(result.ok && result.file.data.budget).toBeNull();
+  });
+
+  it('refuse un budget avec un montant négatif', () => {
+    const file = valid();
+    const budget = {
+      housingCents: -1,
+      flexCents: 40000,
+      totalCents: 140000,
+      updatedAt: '2026-09-20T10:00:00.000Z',
+    };
+    expect(parseBackup(text({ ...file, data: { ...file.data, budget } }))).toEqual({
+      ok: false,
+      error: 'invalid',
+    });
+  });
+});
+
+describe('import bancaire dans le fichier', () => {
+  it('exporte et relit le commerçant et la référence d’origine d’une dépense importée', () => {
+    const imported = {
+      ...expense,
+      note: 'Continente',
+      externalRef: 'revolut:2026-09-05 12:00:00|Continente|-2000|0',
+    };
+    const result = parseBackup(
+      serializeBackup(createBackupFile({ ...sample(), expenses: [imported] })),
+    );
+    expect(result.ok && result.file.data.expenses[0]).toMatchObject({
+      note: 'Continente',
+      externalRef: 'revolut:2026-09-05 12:00:00|Continente|-2000|0',
+    });
+  });
+
+  it('exporte et relit les règles apprises, et un ancien fichier sans règles se relit comme « aucune »', () => {
+    const rules = [
+      {
+        id: 'nobby',
+        categoryId: 'shopping',
+        subcategoryId: null,
+        ignore: false,
+        updatedAt: '2026-09-20T10:00:00.000Z',
+        deletedAt: null,
+      },
+    ];
+    const withRules = parseBackup(
+      serializeBackup(createBackupFile({ ...sample(), merchantRules: rules as never })),
+    );
+    expect(withRules.ok && withRules.file.data.merchantRules).toEqual(rules);
+
+    const file = valid();
+    const oldData = Object.fromEntries(
+      Object.entries(file.data).filter(([section]) => section !== 'merchantRules'),
+    );
+    const legacy = parseBackup(text({ ...file, data: oldData }));
+    expect(legacy.ok && legacy.file.data.merchantRules).toEqual([]);
   });
 });
 

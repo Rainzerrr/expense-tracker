@@ -43,5 +43,16 @@
     "history": "Historique",
     "emptyTitle": "Aucune dépense ce mois-ci",
     "emptyText": "Ajoute ta première dépense avec le bouton +."
+  },
+  "budget": {
+    "title": "Budget du mois",
+    "housing": "Logement",
+    "flex": "Courses + Activités",
+    "total": "Total du mois",
+    "of": "{{spent}} sur {{target}}",
+    "remaining": "il reste {{amount}}",
+    "over": "dépassé de {{amount}}",
+    "softNote": "objectif souple",
+    "manage": "Régler"
   }
 }

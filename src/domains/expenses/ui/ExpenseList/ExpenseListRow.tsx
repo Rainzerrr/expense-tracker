@@ -15,6 +15,8 @@ export interface ExpenseListRowProps {
   /** Sous-catégorie si elle existe, sinon catégorie. */
   label: string;
   categoryLabel: string;
+  /** Le commerçant d'une dépense importée : « Continente ». */
+  note?: string;
   /** Déjà préfixés : « #avec-amis ». */
   tags: string[];
   /** Déjà formaté : « −12,40 € ». */
@@ -39,6 +41,7 @@ export function ExpenseListRow({
   color,
   label,
   categoryLabel,
+  note,
   tags,
   amount,
   dateLabel,
@@ -68,7 +71,9 @@ export function ExpenseListRow({
               {label}
             </span>
             <span className="expense-list-row__meta">
-              <span className="expense-list-row__category">{categoryLabel}</span>
+              <span className="expense-list-row__category">
+                {note ? `${note} · ${categoryLabel}` : categoryLabel}
+              </span>
               {tags.length === 0 && (
                 <span className="expense-list-row__no-tag" aria-hidden="true">
                   {EMPTY_CELL}

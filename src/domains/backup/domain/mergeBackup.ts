@@ -1,7 +1,9 @@
+import type { Budget } from '@/domains/budget';
 import type { Category, Subcategory, Tag, TagId } from '@/domains/categorization';
 import type { Expense } from '@/domains/expenses';
 import { sameTarget } from '@/domains/focus';
 import type { Focus } from '@/domains/focus';
+import type { MerchantRule } from '@/domains/statements';
 import type { IsoInstant } from '@/shared/lib/time';
 import type { BackupData } from './backupFile';
 
@@ -66,6 +68,14 @@ function mergeById<T extends Versioned>(local: readonly T[], incoming: readonly 
   return { toWrite, counts };
 }
 
+/** Le budget n'a qu'une version : la plus récente l'emporte, ou rien ne change. */
+function mergeBudget(local: Budget | null, incoming: Budget | null) {
+  if (!incoming || (local && incoming.updatedAt <= local.updatedAt)) {
+    return { toWrite: null, changed: false };
+  }
+  return { toWrite: incoming, changed: true };
+}
+
 /**
  * Fusionne les données d'un autre appareil dans les données locales, sans jamais rien perdre :
  * - chaque enregistrement garde sa version la plus récente ;
@@ -102,6 +112,8 @@ export function mergeBackup(local: BackupData, incoming: BackupData): MergePlan 
   const subcategories = mergeById<Subcategory>(local.subcategories, incoming.subcategories);
   const tags = mergeById<Tag>(local.tags, incomingTags);
   const focuses = mergeById<Focus>(local.focuses, incomingFocuses);
+  const merchantRules = mergeById<MerchantRule>(local.merchantRules, incoming.merchantRules);
+  const budget = mergeBudget(local.budget, incoming.budget);
 
   // 3. Dépenses : on répare les tags renvoyés vers leur jumeau, puis on vérifie les références.
   const knownCategoryIds = new Set([...local.categories, ...incoming.categories].map((c) => c.id));
@@ -110,9 +122,16 @@ export function mergeBackup(local: BackupData, incoming: BackupData): MergePlan 
   );
   const knownTagIds = new Set([...local.tags, ...incomingTags].map((t) => t.id as string));
 
+  // Une même opération bancaire importée séparément sur deux appareils (deux identifiants) n'existe qu'une fois.
+  const localRefs = new Map(
+    local.expenses.flatMap((e) => (e.externalRef ? [[e.externalRef, e.id] as const] : [])),
+  );
+
   let skipped = 0;
   const usableExpenses: Expense[] = [];
   for (const expense of incoming.expenses) {
+    const twinId = expense.externalRef ? localRefs.get(expense.externalRef) : undefined;
+    if (twinId !== undefined && twinId !== expense.id) continue;
     const categoryOk = knownCategoryIds.has(expense.categoryId);
     const subcategoryOk =
       expense.subcategoryId === null || knownSubcategoryIds.has(expense.subcategoryId);
@@ -134,6 +153,8 @@ export function mergeBackup(local: BackupData, incoming: BackupData): MergePlan 
       subcategories: subcategories.toWrite,
       tags: tags.toWrite,
       focuses: focuses.toWrite,
+      merchantRules: merchantRules.toWrite,
+      budget: budget.toWrite,
     },
     summary: {
       expenses: { ...expenses.counts, skipped },
@@ -142,7 +163,8 @@ export function mergeBackup(local: BackupData, incoming: BackupData): MergePlan 
           categories.counts.added +
           subcategories.counts.added +
           tags.counts.added +
-          focuses.counts.added,
+          focuses.counts.added +
+          merchantRules.counts.added,
         updated:
           categories.counts.updated +
           categories.counts.deleted +
@@ -151,7 +173,10 @@ export function mergeBackup(local: BackupData, incoming: BackupData): MergePlan 
           tags.counts.updated +
           tags.counts.deleted +
           focuses.counts.updated +
-          focuses.counts.deleted,
+          focuses.counts.deleted +
+          merchantRules.counts.updated +
+          merchantRules.counts.deleted +
+          (budget.changed ? 1 : 0),
       },
     },
   };

@@ -20,10 +20,6 @@ export const routes: RouteObject[] = [
             }),
           },
           {
-            path: 'stats',
-            lazy: async () => ({ Component: (await import('@/pages/StatsPage')).StatsPage }),
-          },
-          {
             path: 'focus',
             lazy: async () => ({ Component: (await import('@/pages/FocusPage')).FocusPage }),
           },

@@ -81,6 +81,7 @@ export default tseslint.config(
             '@/domains/*/react',
             '@/domains/*/form',
             '@/domains/*/data',
+            '@/domains/*/settings',
             '@/domains/*/detail',
             '@/domains/*/manager',
             '@/shared/ui/*',

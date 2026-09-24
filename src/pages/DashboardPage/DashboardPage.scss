@@ -18,6 +18,7 @@
     grid-template-areas:
       'header header'
       'summary summary'
+      'budget budget'
       'rhythm breakdown'
       'focus focus'
       'recent recent';
@@ -30,6 +31,10 @@
 
     &__summary {
       grid-area: summary;
+    }
+
+    &__budget {
+      grid-area: budget;
     }
 
     &__rhythm {

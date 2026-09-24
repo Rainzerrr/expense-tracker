@@ -11,7 +11,7 @@ export interface CsvLabels {
 
 /**
  * Une ligne par dépense (les supprimées sont exclues), de la plus ancienne à la plus récente :
- * Date, Montant, Catégorie, Sous-catégorie, Tags. Les libellés sont ceux que l'utilisateur voit.
+ * Date, Montant, Catégorie, Sous-catégorie, Tags, Note (le commerçant d'un import). Les libellés sont ceux que l'utilisateur voit.
  */
 export function expensesToCsv(
   expenses: readonly Expense[],
@@ -35,6 +35,7 @@ export function expensesToCsv(
       category ? labels.category(category) : '',
       subcategory ? labels.subcategory(subcategory) : '',
       tags.join(' '),
+      expense.note ?? '',
     ];
   });
 

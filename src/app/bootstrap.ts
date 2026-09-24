@@ -1,6 +1,10 @@
 import { ensureDefaultCatalog } from '@/domains/categorization';
 import type { CatalogRepository } from '@/domains/categorization';
 import { DexieCatalogRepository } from '@/domains/categorization/infrastructure';
+import type { BudgetRepository } from '@/domains/budget';
+import { DexieBudgetRepository } from '@/domains/budget/infrastructure';
+import type { MerchantRuleRepository } from '@/domains/statements';
+import { DexieMerchantRuleRepository } from '@/domains/statements/infrastructure';
 import type { FocusRepository } from '@/domains/focus';
 import { DexieFocusRepository } from '@/domains/focus/infrastructure';
 import type { ExpenseRepository } from '@/domains/expenses';
@@ -18,6 +22,8 @@ export interface AppServices {
   catalog: CatalogRepository;
   backup: BackupRepository;
   focus: FocusRepository;
+  merchantRules: MerchantRuleRepository;
+  budget: BudgetRepository;
   isDemo: boolean;
   /** Horloge injectable : les tests figent la date. */
   now: () => Date;
@@ -49,6 +55,8 @@ export async function bootstrap({
   const expenses = new DexieExpenseRepository(db);
   const backup = new DexieBackupRepository(db);
   const focus = new DexieFocusRepository(db);
+  const merchantRules = new DexieMerchantRuleRepository(db);
+  const budget = new DexieBudgetRepository(db);
 
   await ensureDefaultCatalog(catalog);
   if (isDemo) {
@@ -56,5 +64,15 @@ export async function bootstrap({
     await seedDemo({ expenses, focus }, now);
   }
 
-  return { db, expenses, catalog, backup, focus, isDemo, now: () => now ?? new Date() };
+  return {
+    db,
+    expenses,
+    catalog,
+    backup,
+    focus,
+    merchantRules,
+    budget,
+    isDemo,
+    now: () => now ?? new Date(),
+  };
 }

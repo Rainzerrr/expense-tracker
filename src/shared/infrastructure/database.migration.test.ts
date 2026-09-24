@@ -61,8 +61,10 @@ describe('migration de la base v1 → v2', () => {
       amount: 1240,
       date: '2026-09-20',
     });
-    // Les tables ajoutées ensuite existent (meta en v2, focuses en v3).
+    // Les tables ajoutées ensuite existent (meta en v2, focuses en v3, merchantRules en v4, budget en v5).
     expect(await db.focuses.count()).toBe(0);
+    expect(await db.merchantRules.count()).toBe(0);
+    expect(await db.budget.count()).toBe(0);
     await db.meta.put({ key: 'test', value: '1' });
     expect((await db.meta.get('test'))?.value).toBe('1');
 

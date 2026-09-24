@@ -6,8 +6,6 @@
   "nav": {
     "label": "Navigation principale",
     "home": "Accueil",
-    "stats": "Stats",
-    "statsLong": "Statistiques",
     "history": "Historique",
     "settings": "Réglages",
     "addExpense": "Ajouter une dépense"
@@ -15,9 +13,6 @@
   "pages": {
     "dashboard": {
       "title": "Accueil"
-    },
-    "stats": {
-      "title": "Statistiques"
     },
     "history": {
       "title": "Historique"
@@ -49,5 +44,9 @@
   "relativeDay": {
     "today": "Aujourd'hui",
     "yesterday": "Hier"
+  },
+  "update": {
+    "message": "Une nouvelle version de l'application est prête.",
+    "action": "Mettre à jour"
   }
 }

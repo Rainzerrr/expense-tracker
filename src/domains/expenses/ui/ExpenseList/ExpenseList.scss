@@ -1,6 +1,6 @@
 @use '@/shared/styles/abstracts' as *;
 
-$columns: 130px minmax(120px, 240px) minmax(0, 1fr) 170px 110px;
+$columns: 130px minmax(120px, 200px) minmax(0, 1fr) 150px 110px;
 
 .expense-list {
   display: flex;
@@ -270,10 +270,15 @@ $columns: 130px minmax(120px, 240px) minmax(0, 1fr) 170px 110px;
       font-size: 16px;
     }
 
+    // Une seule ligne : « Continente · Courses » ne doit pas rendre les rangées inégales.
     &__category {
       grid-column: 3;
+      min-width: 0;
+      overflow: hidden;
       color: var(--color-text-muted);
       font-size: 14px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     &__no-tag {

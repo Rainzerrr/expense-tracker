@@ -76,6 +76,7 @@ export function ExpenseList({
                       color={`var(--category-${category.color})`}
                       label={subcategory ? labels.subcategory(subcategory) : categoryLabel}
                       categoryLabel={categoryLabel}
+                      note={expense.note}
                       tags={expense.tagIds.flatMap((id) => {
                         const tag = tagName(id);
                         return tag ? [labels.tag(tag)] : [];

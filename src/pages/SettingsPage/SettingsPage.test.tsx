@@ -199,8 +199,8 @@ describe('exporter pour un tableur', () => {
     const bytes = new Uint8Array(await downloads[0]!.arrayBuffer());
     expect([...bytes.slice(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
     const csv = await downloads[0]!.text(); // .text() retire la marque
-    expect(csv).toContain('Date;Montant (€);Catégorie;Sous-catégorie;Tags\r\n');
-    expect(csv).toContain('2026-09-20;12,40;Courses;Viande;#avec-amis\r\n');
+    expect(csv).toContain('Date;Montant (€);Catégorie;Sous-catégorie;Tags;Note\r\n');
+    expect(csv).toContain('2026-09-20;12,40;Courses;Viande;#avec-amis;\r\n');
   });
 });
 

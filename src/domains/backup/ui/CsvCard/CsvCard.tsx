@@ -33,6 +33,7 @@ export function CsvCard() {
           t('data.csv.header.category'),
           t('data.csv.header.subcategory'),
           t('data.csv.header.tags'),
+          t('data.csv.header.note'),
         ],
         category: labels.category,
         subcategory: labels.subcategory,

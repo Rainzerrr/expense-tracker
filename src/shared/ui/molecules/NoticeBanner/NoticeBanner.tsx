@@ -10,17 +10,23 @@ interface NoticeBannerBaseProps {
 export type NoticeBannerProps = NoticeBannerBaseProps &
   // Lien classique (rechargement) : par exemple pour quitter le mode démo.
   (
-    | { href: string; to?: never }
+    | { href: string; to?: never; onAction?: never }
     // Navigation dans l'application.
-    | { to: To; href?: never }
+    | { to: To; href?: never; onAction?: never }
+    // Action sur place (par exemple « Mettre à jour »).
+    | { onAction: () => void; href?: never; to?: never }
   );
 
 /** Bandeau d'information avec une action : mode démo, rappel de sauvegarde. */
-export function NoticeBanner({ message, actionLabel, href, to }: NoticeBannerProps) {
+export function NoticeBanner({ message, actionLabel, href, to, onAction }: NoticeBannerProps) {
   return (
     <div className="notice-banner">
       <p className="notice-banner__message">{message}</p>
-      {to !== undefined ? (
+      {onAction ? (
+        <button type="button" className="notice-banner__action" onClick={onAction}>
+          {actionLabel}
+        </button>
+      ) : to !== undefined ? (
         <Link className="notice-banner__action" to={to}>
           {actionLabel}
         </Link>

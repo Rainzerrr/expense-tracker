@@ -22,6 +22,8 @@ const expenseSchema = z.object({
   createdAt: instant,
   updatedAt: instant,
   deletedAt: nullableInstant,
+  note: z.string().max(300).optional(),
+  externalRef: z.string().max(300).optional(),
 });
 
 const categorySchema = z.object({
@@ -60,6 +62,22 @@ const focusSchema = z.object({
   deletedAt: nullableInstant,
 });
 
+const merchantRuleSchema = z.object({
+  id: z.string().min(1).max(300),
+  categoryId: id.nullable(),
+  subcategoryId: id.nullable(),
+  ignore: z.boolean(),
+  updatedAt: instant,
+  deletedAt: nullableInstant,
+});
+
+const budgetSchema = z.object({
+  housingCents: z.number().int().nonnegative(),
+  flexCents: z.number().int().nonnegative(),
+  totalCents: z.number().int().nonnegative(),
+  updatedAt: instant,
+});
+
 const backupSchema = z.object({
   format: z.literal(BACKUP_FORMAT),
   version: z.number().int().positive(),
@@ -71,6 +89,9 @@ const backupSchema = z.object({
     tags: z.array(tagSchema),
     // Les sauvegardes d'avant les focus n'ont pas cette section : elle vaut alors « aucun focus ».
     focuses: z.array(focusSchema).default([]),
+    merchantRules: z.array(merchantRuleSchema).default([]),
+    // Absent des fichiers créés avant le budget : le budget par défaut est alors utilisé.
+    budget: budgetSchema.nullable().default(null),
   }),
 });
 

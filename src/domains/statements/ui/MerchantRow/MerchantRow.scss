@@ -1,0 +1,81 @@
+@use '@/shared/styles/abstracts' as *;
+
+.merchant-row {
+  display: flex;
+  flex-direction: column;
+  gap: space(2);
+  padding: space(3) space(4);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  background: var(--color-ground);
+
+  // Un commerçant à classer se repère d'un coup d'œil.
+  &--unresolved {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    overflow: hidden;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: space(1);
+    color: var(--color-text-muted);
+    font-size: 13px;
+  }
+
+  &__total {
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__badge {
+    margin-left: space(2);
+    padding: 2px space(2);
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  &__select {
+    width: 100%;
+    min-height: $touch-target;
+    padding-inline: space(3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+
+    // 16 px minimum : en dessous, iOS zoome la page à l'ouverture du sélecteur.
+    font-size: 16px;
+  }
+
+  @include up(lg) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: space(4);
+
+    &__info {
+      flex: 1;
+    }
+
+    &__select {
+      flex: 0 0 280px;
+      width: 280px;
+    }
+  }
+}

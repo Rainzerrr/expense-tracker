@@ -4,6 +4,8 @@ import { isLocalDate } from '@/shared/lib/time';
 import type { IsoInstant, LocalDate } from '@/shared/lib/time';
 import type { Cents } from './money';
 
+const MAX_NOTE_LENGTH = 200;
+
 export type ExpenseId = Brand<string, 'ExpenseId'>;
 
 export interface Expense {
@@ -19,6 +21,13 @@ export interface Expense {
   updatedAt: IsoInstant;
   /** Suppression logique : permet « Annuler ». */
   deletedAt: IsoInstant | null;
+  /** Libellé libre : par exemple le commerçant d'une dépense importée depuis un relevé bancaire. */
+  note?: string;
+  /**
+   * Identité d'origine d'une dépense importée (« revolut:… »). Sert à ne jamais importer deux fois la
+   * même opération, même si les périodes de deux relevés se chevauchent.
+   */
+  externalRef?: string;
 }
 
 /** Ce que saisit l'utilisateur, avant validation. */
@@ -28,6 +37,8 @@ export interface ExpenseInput {
   subcategoryId: SubcategoryId | null;
   tagIds: TagId[];
   date: string;
+  note?: string;
+  externalRef?: string;
 }
 
 export type ExpenseError = 'invalidAmount' | 'invalidDate' | 'subcategoryMismatch' | 'notFound';
@@ -71,11 +82,14 @@ export interface CreateExpenseContext {
 export function createExpense(input: ExpenseInput, context: CreateExpenseContext): ExpenseResult {
   const checked = validate(input, context.isSubcategoryOf);
   if (!checked.ok) return checked;
+  const note = input.note?.trim().slice(0, MAX_NOTE_LENGTH);
   return {
     ok: true,
     expense: {
       id: context.id,
       ...checked.fields,
+      ...(note ? { note } : {}),
+      ...(input.externalRef ? { externalRef: input.externalRef } : {}),
       createdAt: context.now,
       updatedAt: context.now,
       deletedAt: null,

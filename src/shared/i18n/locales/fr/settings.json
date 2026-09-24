@@ -60,12 +60,91 @@
         "amount": "Montant (€)",
         "category": "Catégorie",
         "subcategory": "Sous-catégorie",
-        "tags": "Tags"
+        "tags": "Tags",
+        "note": "Note"
       }
     },
     "reminder": {
       "message": "Tes dernières dépenses ne sont sauvegardées nulle part depuis {{days}} jours.",
       "action": "Sauvegarder"
     }
+  },
+  "storage": {
+    "title": "Protection du stockage",
+    "protected": "Protégé : le navigateur s'est engagé à ne pas effacer tes données.",
+    "unprotected": "Non protégé : le navigateur peut effacer tes données si l'appareil manque de place ou si l'app reste longtemps inutilisée. Installe-la sur l'écran d'accueil et fais des sauvegardes.",
+    "unknown": "Ce navigateur ne permet pas de vérifier la protection du stockage."
+  },
+  "statement": {
+    "title": "Importer un relevé Revolut",
+    "text": "Dans Revolut : Compte → Relevé → CSV, sur la période de ton choix (par exemple du 1er du mois à aujourd'hui). Tu peux réimporter des périodes qui se chevauchent : une opération déjà importée n'est jamais dupliquée.",
+    "choose": "Choisir le relevé (CSV)",
+    "drop": "ou dépose-le ici",
+    "reading": "Lecture du relevé…",
+    "importing": "Import en cours…",
+    "errors": {
+      "empty": "Ce fichier est vide.",
+      "notAStatement": "Ce fichier n'est pas un relevé Revolut : il manque les colonnes attendues (type, date de début, description, montant…).",
+      "tooLarge": "Ce fichier est beaucoup trop gros pour être un relevé.",
+      "readFailed": "Le relevé n'a pas pu être lu. Réessaie."
+    },
+    "preview": {
+      "title": "Ce que l'import va faire",
+      "nothing": "Aucune nouvelle dépense à importer.",
+      "summary_one": "{{count}} dépense à importer, pour {{amount}}.",
+      "summary_other": "{{count}} dépenses à importer, pour {{amount}}.",
+      "toClassify_one": "{{count}} commerçant à classer avant d'importer.",
+      "toClassify_other": "{{count}} commerçants à classer avant d'importer.",
+      "allClassified": "Tout est classé. Vérifie les catégories, puis importe.",
+      "skippedTitle": "Opérations ignorées",
+      "skipped": {
+        "pending": "En attente : {{count}} (importées avec le prochain relevé)",
+        "notCompleted": "Annulées ou refusées : {{count}}",
+        "foreignCurrency": "Autre devise : {{count}}",
+        "topUp": "Recharges du compte : {{count}}",
+        "incoming": "Entrées d'argent (remboursements…) : {{count}}",
+        "otherType": "Autre type ({{types}}) : {{count}}",
+        "outsideStay": "En dehors de ton séjour : {{count}}",
+        "alreadyImported": "Déjà importées : {{count}}"
+      },
+      "unreadable": "Lignes illisibles : {{count}}",
+      "merchantsTitle": "Catégorie de chaque commerçant",
+      "merchantsHint": "Ton choix est retenu : la prochaine fois, ce commerçant sera classé tout seul.",
+      "purchases_one": "{{count}} achat",
+      "purchases_other": "{{count}} achats",
+      "toClassifyBadge": "À classer",
+      "choose": "Classer…",
+      "skip": "Ne pas importer",
+      "categoryOnly": "{{category}} (sans sous-catégorie)",
+      "merchantCategory": "Catégorie pour {{merchant}}",
+      "confirm_one": "Importer {{count}} dépense",
+      "confirm_other": "Importer {{count}} dépenses",
+      "cancel": "Annuler"
+    },
+    "done": {
+      "title": "Import terminé",
+      "summary_one": "{{count}} dépense importée ({{amount}}).",
+      "summary_other": "{{count}} dépenses importées ({{amount}}).",
+      "learned_one": "{{count}} règle retenue pour la prochaine fois.",
+      "learned_other": "{{count}} règles retenues pour la prochaine fois.",
+      "skipped": "Ignorées car déjà présentes : {{count}}",
+      "seeHistory": "Voir dans l'historique"
+    }
+  },
+  "budget": {
+    "title": "Budget mensuel",
+    "text": "Ton objectif pour un mois normal. Tu peux puiser dans les courses pour les activités (ou l'inverse) : seul le total des deux compte vraiment.",
+    "housing": {
+      "label": "Logement"
+    },
+    "flex": {
+      "label": "Courses + Activités (ensemble)"
+    },
+    "total": {
+      "label": "Total du mois (l'objectif à ne pas dépasser)"
+    },
+    "save": "Enregistrer",
+    "saved": "Budget enregistré.",
+    "error": "Vérifie les montants : ils doivent être des nombres positifs."
   }
 }

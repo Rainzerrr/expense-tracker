@@ -3,6 +3,8 @@ import type { EntityTable } from 'dexie';
 import type { Category, Subcategory, Tag } from '@/domains/categorization';
 import type { Expense } from '@/domains/expenses';
 import type { Focus } from '@/domains/focus';
+import type { Budget } from '@/domains/budget';
+import type { MerchantRule } from '@/domains/statements';
 import { EPOCH_INSTANT } from '@/shared/lib/time';
 
 export const DATABASE_NAME = 'expense-tracker';
@@ -22,6 +24,8 @@ export class AppDatabase extends Dexie {
   tags!: EntityTable<Tag, 'id'>;
   meta!: EntityTable<MetaEntry, 'key'>;
   focuses!: EntityTable<Focus, 'id'>;
+  merchantRules!: EntityTable<MerchantRule, 'id'>;
+  budget!: EntityTable<Budget & { id: string }, 'id'>;
 
   constructor(name: string) {
     super(name);
@@ -63,6 +67,27 @@ export class AppDatabase extends Dexie {
       tags: 'id, name',
       meta: 'key',
       focuses: 'id, position',
+    });
+    // v4 : les règles « commerçant → catégorie » apprises lors des imports de relevés bancaires.
+    this.version(4).stores({
+      expenses: 'id, date, categoryId, subcategoryId, *tagIds',
+      categories: 'id, position',
+      subcategories: 'id, categoryId',
+      tags: 'id, name',
+      meta: 'key',
+      focuses: 'id, position',
+      merchantRules: 'id',
+    });
+    // v5 : l'objectif de budget mensuel (une seule ligne, id « current »).
+    this.version(5).stores({
+      expenses: 'id, date, categoryId, subcategoryId, *tagIds',
+      categories: 'id, position',
+      subcategories: 'id, categoryId',
+      tags: 'id, name',
+      meta: 'key',
+      focuses: 'id, position',
+      merchantRules: 'id',
+      budget: 'id',
     });
   }
 }

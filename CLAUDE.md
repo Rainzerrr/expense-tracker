@@ -83,6 +83,39 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 - **Démo** : trois focus (viande, transport, restaurants), chargés à la demande (`app/seedDemo.ts`). En usage réel, aucun focus par défaut.
 - Sous-catégorie → l'historique n'a pas de filtre dédié : le lien « Voir les N entrées » passe par la recherche texte (`?q=Viande`).
 
+## Import de relevés bancaires (contexte `statements`)
+
+- **Pas d'automatisation** : Revolut n'offre de webhooks qu'à l'API _Business_ ; un compte personnel n'en a pas, et un webhook exigerait un serveur (exclu). L'import se fait par **relevé CSV** (Revolut → Compte → Relevé), sur **n'importe quelle période** (pas seulement des mois) : les doublons sont ignorés, donc les périodes peuvent se chevaucher.
+- **Format lu** (`domain/revolutStatement.ts`) : colonnes françaises ou anglaises (`Type, Produit, Date de début, Date de fin, Description, Montant, Frais, Devise, État, Solde`), séparateur `,` ou `;`. On utilise la **date de DÉBUT** (le jour de l'achat), pas celle de fin (règlement, 1 à 3 jours après). Montants : format strict (une ligne douteuse est comptée « illisible », jamais devinée). Le fichier réel de l'utilisateur est lu par un test local (`describe.skipIf`), exclu de git (`account-statement_*.csv` dans `.gitignore`) : **ne jamais copier de vraies données bancaires dans le dépôt**.
+- **Ce qui est importé** : paiements par carte (et frais, prélèvements) terminés, en euros, dans le séjour. **Ignoré avec sa raison affichée** : en attente (importé au prochain relevé), annulé/refusé, autre devise, recharges, entrées d'argent, autres types (listés), hors séjour, déjà importé. **Virements et retraits** : proposés mais sur « Ne pas importer » par défaut (ça peut être le loyer ou un ami).
+- **Doublons** : chaque opération a une `externalRef` (`revolut:début|commerçant|montant|frais`, `#n` pour deux opérations identiques à la seconde). Elle est comparée à **toutes** les dépenses, **supprimées comprises** : une dépense supprimée ne revient jamais. `mergeBackup` écarte aussi deux dépenses de même `externalRef` (import du même relevé sur deux appareils).
+- **Catégorisation** (`domain/merchantRules.ts`) : règles apprises (exactes, par commerçant normalisé) > règles livrées (mots-clés en début de mot, volontairement prudents) > « à classer ». L'utilisateur confirme la catégorie de chaque commerçant à l'aperçu ; **seuls les changements sont retenus** (table `merchantRules`, base v4, incluse dans la sauvegarde). L'import est bloqué tant qu'un commerçant reste « à classer ».
+- La dépense garde le commerçant en `note` (affichée dans l'historique, cherchable, colonne « Note » du CSV). Deux étapes comme l'import de sauvegarde : `previewStatement` (n'écrit rien) puis `importStatement` (revérifie les références au moment de confirmer).
+- Piège d'ergonomie déjà rencontré : dans un `<select>` fermé, seul le texte de l'option s'affiche — préfixer la sous-catégorie par sa catégorie.
+
+## Budget mensuel (contexte `budget`)
+
+- Onglet **Stats retiré** (route, page, icône `trend`, entrées de nav) : il ne menait qu'à un écran vide. Remplacé par un vrai objectif chiffré, plus utile qu'une page de statistiques vide.
+- Trois lignes, données par l'utilisateur : **Logement** 1 000 €, **Courses + Activités réunies** 400 € (objectif _souple_ : on peut puiser dans l'une pour l'autre, le dépasser n'est pas grave), **Total du mois** 1 400 € (le seul objectif dur — « ne pas dépasser 1400€ au total »). `domain/budget.ts` (`DEFAULT_BUDGET`, `FLEX_CATEGORY_IDS = [groceries, activities]`), `domain/budgetStatus.ts` (calcul pur, testé).
+- Base v5, une seule ligne (`id: 'current'`). Dans la sauvegarde comme les autres domaines (la plus récente `updatedAt` gagne), avec un piège propre à un singleton : pas de `mergeById`, une fonction `mergeBudget` dédiée (`local`/`incoming` peuvent être `null` si jamais réglé).
+- **`ProgressBar` a maintenant un `tone`** (`accent`/`warning`/`danger`) : `warning` pour un dépassement sans gravité (courses + activités), `danger` pour le logement et le total.
+- Piège déjà rencontré : ne pas remonter (`key=...`) un formulaire contrôlé juste après qu'il ait écrit sa propre donnée — le composant perd son état local (message « Enregistré ») avant que l'utilisateur ne le voie. `BudgetSettingsCard` ne force donc pas de remontage ; un import externe pendant que Réglages est ouvert n'est repris qu'à la prochaine ouverture de l'écran (comme le reste des formulaires de l'app).
+- Trois points d'entrée React comme les autres contextes : `react.ts` (dashboard, léger), `settings.ts` (formulaire de réglage), `index.ts` (pur).
+
+## Barre de navigation
+
+`BottomNav` répartit `leadingItems`/`trailingItems` dans deux groupes flexibles de largeur égale (`&__side { flex: 1 }`), pas une grille à 5 colonnes fixes : le bouton central reste centré même à 1 contre 2 (aujourd'hui : Accueil seul à gauche, Historique + Réglages à droite).
+
+## PWA et déploiement
+
+- **vite-plugin-pwa** (Workbox `generateSW`), `registerType: 'prompt'` : une nouvelle version n'est jamais appliquée sans clic (`app/UpdatePrompt.tsx`, bandeau « Mettre à jour »). Le service worker n'existe qu'au **build** (`npm run build` puis `npx vite preview`), pas en `npm run dev`.
+- **Hors ligne vérifié** : serveur arrêté, `/history` et le panneau de saisie (chunks paresseux, Zod compris) se chargent depuis le cache. Précache : tout `dist` sauf la police vietnamienne. Navigation hors ligne = `navigateFallback: /index.html`.
+- **Icônes** générées à partir de `public/logo.svg` par `npm run icons` (`pwa-assets.config.ts`) : ne pas éditer les PNG à la main. Le logo est plein cadre (le système arrondit les coins) ; l'épaisseur du trait est dans le repère du pictogramme (déjà piégé une fois : trait ×13).
+- **Test** : `virtual:pwa-register/react` est remplacé en test par `src/test/pwaRegisterStub.ts` (alias dans `vite.config.ts`, actif si `VITEST`).
+- **Stockage** : `requestPersistentStorage()` au démarrage (`main.tsx`) ; Réglages affiche « Protégé / Non protégé » (`StorageStatus`). Chrome bureau répond « non » tant que l'engagement est faible : c'est normal. Sur iPhone, ce qui protège vraiment les données, c'est l'**installation sur l'écran d'accueil**.
+- **Vercel** (`vercel.json`) : réécriture de toutes les routes vers `/index.html`, `sw.js`/`index.html`/manifest sans cache, `/assets/*` immuables, en-têtes de durcissement. **Pas de CSP** volontairement (non testable hors Vercel) : à ajouter une fois en ligne. Réglages du projet Vercel : framework Vite, build `npm run build`, sortie `dist`, Node 22.
+- **Piège iPhone** : la PWA installée et Safari ont **chacun leur stockage**. Installer l'app _avant_ de saisir de vraies dépenses ; sinon, ce qui a été saisi dans un onglet Safari doit passer par Envoyer → Recevoir.
+
 ## Commandes
 
 - `npm run dev` (`dev:lan` pour tester depuis l'iPhone sur le même Wi-Fi)
@@ -98,4 +131,4 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 - [x] 4. Historique (liste, recherche, filtres, modification, suppression + annulation)
 - [x] 5. Focus (cartes du dashboard, page de détail, gestion : épingler / retirer / réordonner)
 - [~] 6. Réglages : **export/import/CSV/rappel faits** (fait avant l'étape 5) ; reste : dates du séjour, gestion des catégories/tags, à propos
-- [ ] 7. PWA et déploiement (statique, sans backend)
+- [~] 7. PWA : **code fait et vérifié hors ligne** (service worker, manifest, icônes, mise à jour, stockage persistant, `vercel.json`) ; reste : mise en ligne sur Vercel et test sur un vrai iPhone

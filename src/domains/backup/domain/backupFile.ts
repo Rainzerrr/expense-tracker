@@ -1,6 +1,8 @@
 import type { Category, Subcategory, Tag } from '@/domains/categorization';
 import type { Expense } from '@/domains/expenses';
 import type { Focus } from '@/domains/focus';
+import type { Budget } from '@/domains/budget';
+import type { MerchantRule } from '@/domains/statements';
 import { nowInstant } from '@/shared/lib/time';
 import type { IsoInstant } from '@/shared/lib/time';
 
@@ -16,6 +18,10 @@ export interface BackupData {
   tags: Tag[];
   /** Absents des fichiers créés avant l'existence des focus : lus comme une liste vide. */
   focuses: Focus[];
+  /** Idem : règles « commerçant → catégorie » apprises. */
+  merchantRules: MerchantRule[];
+  /** Absent : le budget par défaut sera utilisé. */
+  budget: Budget | null;
 }
 
 export interface BackupFile {
@@ -34,6 +40,8 @@ export const emptyBackupData = (): BackupData => ({
   subcategories: [],
   tags: [],
   focuses: [],
+  merchantRules: [],
+  budget: null,
 });
 
 export function createBackupFile(data: BackupData, now: Date = new Date()): BackupFile {

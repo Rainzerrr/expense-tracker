@@ -12,15 +12,13 @@
   }
 
   &__section {
+    margin-bottom: space(1);
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
   }
 
-  &__intro {
-    display: flex;
-    flex-direction: column;
-    gap: space(1);
+  &__section-text {
     color: var(--color-text-muted);
     font-size: 14px;
   }
@@ -31,7 +29,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: space(6);
 
-    &__header {
+    &__header,
+    &__wide {
       grid-column: 1 / -1;
     }
   }

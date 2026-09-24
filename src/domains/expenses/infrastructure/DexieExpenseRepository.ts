@@ -49,6 +49,14 @@ export class DexieExpenseRepository implements ExpenseRepository {
       );
   }
 
+  async externalRefs() {
+    const refs = new Set<string>();
+    await this.db.expenses.each((expense) => {
+      if (expense.externalRef) refs.add(expense.externalRef);
+    });
+    return refs;
+  }
+
   async isEmpty() {
     return (await this.db.expenses.count()) === 0;
   }

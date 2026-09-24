@@ -259,3 +259,96 @@ describe('mergeBackup : focus', () => {
     ).toEqual([]);
   });
 });
+
+describe('mergeBackup : import bancaire', () => {
+  const REF = 'revolut:2026-09-05 12:00:00|Continente|-2000|0';
+
+  it('une même opération importée séparément sur deux appareils n’existe qu’une fois', () => {
+    const local = device([spend('LOCAL', { externalRef: REF })]);
+    const incoming = device([spend('REMOTE', { externalRef: REF }), spend('autre')]);
+    const plan = mergeBackup(local, incoming);
+    expect(plan.toWrite.expenses.map((e) => e.id)).toEqual(['autre']);
+  });
+
+  it('ne confond pas deux dépenses qui n’ont pas de référence', () => {
+    const plan = mergeBackup(device([spend('a')]), device([spend('b')]));
+    expect(plan.toWrite.expenses.map((e) => e.id)).toEqual(['b']);
+  });
+
+  it('la même dépense (même identifiant) garde sa fusion normale malgré la référence', () => {
+    const local = device([spend('same', { externalRef: REF })]);
+    const incoming = device([
+      spend('same', {
+        externalRef: REF,
+        amount: 3000 as Expense['amount'],
+        updatedAt: at('21T09:00'),
+      }),
+    ]);
+    expect(mergeBackup(local, incoming).toWrite.expenses[0]?.amount).toBe(3000);
+  });
+
+  it('propage une règle apprise, la plus récente l’emportant', () => {
+    const rule = (id: string, categoryId: string, updatedAt: IsoInstant) => ({
+      id,
+      categoryId,
+      subcategoryId: null,
+      ignore: false,
+      updatedAt,
+      deletedAt: null,
+    });
+    const local = device([], {
+      merchantRules: [rule('nobby', 'shopping', at('20T10:00'))] as never,
+    });
+    const incoming = device([], {
+      merchantRules: [
+        rule('nobby', 'misc', at('21T10:00')),
+        rule('autre', 'x', at('21T10:00')),
+      ] as never,
+    });
+    const plan = mergeBackup(local, incoming);
+    expect(plan.toWrite.merchantRules.map((r) => [r.id, r.categoryId]).sort()).toEqual([
+      ['autre', 'x'],
+      ['nobby', 'misc'],
+    ]);
+  });
+});
+
+describe('mergeBackup : budget', () => {
+  const budget = (housingCents: number, updatedAt: IsoInstant) => ({
+    housingCents,
+    flexCents: 40000,
+    totalCents: 140000,
+    updatedAt,
+  });
+
+  it('n’écrit rien quand l’autre appareil n’a jamais réglé son budget', () => {
+    const local = device([], { budget: budget(100000, at('20T10:00')) as never });
+    const plan = mergeBackup(local, device());
+    expect(plan.toWrite.budget).toBeNull();
+  });
+
+  it('adopte le budget de l’autre appareil quand le nôtre n’a jamais été réglé', () => {
+    const incoming = device([], { budget: budget(90000, at('20T10:00')) as never });
+    const plan = mergeBackup(device(), incoming);
+    expect(plan.toWrite.budget).toMatchObject({ housingCents: 90000 });
+    expect(plan.summary.catalog.updated).toBe(1);
+  });
+
+  it('garde le budget local quand il est plus récent', () => {
+    const local = device([], { budget: budget(100000, at('21T10:00')) as never });
+    const incoming = device([], { budget: budget(90000, at('20T10:00')) as never });
+    expect(mergeBackup(local, incoming).toWrite.budget).toBeNull();
+  });
+
+  it('adopte le budget entrant quand il est plus récent', () => {
+    const local = device([], { budget: budget(100000, at('20T10:00')) as never });
+    const incoming = device([], { budget: budget(120000, at('21T10:00')) as never });
+    expect(mergeBackup(local, incoming).toWrite.budget).toMatchObject({ housingCents: 120000 });
+  });
+
+  it('ne change rien à égalité de date', () => {
+    const local = device([], { budget: budget(100000, at('20T10:00')) as never });
+    const incoming = device([], { budget: budget(999, at('20T10:00')) as never });
+    expect(mergeBackup(local, incoming).toWrite.budget).toBeNull();
+  });
+});

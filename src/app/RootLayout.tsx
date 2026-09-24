@@ -7,6 +7,7 @@ import { BottomNav } from '@/shared/ui/organisms/BottomNav';
 import { Sidebar } from '@/shared/ui/organisms/Sidebar';
 import { AppShell } from '@/shared/ui/templates/AppShell';
 import { useAppServices } from './AppServices';
+import { UpdatePrompt } from './UpdatePrompt';
 import { useEditExpensePanel, useFocusManagerPanel, useNewExpensePanel } from './panels';
 import { useUndoToast } from './undoToast';
 import { StayProgressSummary } from './StayProgressSummary';
@@ -41,7 +42,6 @@ export function RootLayout() {
   const home: NavItem = { to: '/', label: t('nav.home'), icon: 'home' };
   const history: NavItem = { to: '/history', label: t('nav.history'), icon: 'list' };
   const settings: NavItem = { to: '/settings', label: t('nav.settings'), icon: 'settings' };
-  const stats: NavItem = { to: '/stats', label: t('nav.stats'), icon: 'stats' };
 
   return (
     <AppShell
@@ -50,19 +50,20 @@ export function RootLayout() {
           title={t('app.name')}
           subtitle={t('app.tagline')}
           navLabel={t('nav.label')}
-          items={[home, { ...stats, label: t('nav.statsLong'), icon: 'trend' }, history, settings]}
+          items={[home, history, settings]}
           footer={<StayProgressSummary />}
         />
       }
       bottomNav={
         <BottomNav
           label={t('nav.label')}
-          leadingItems={[home, stats]}
+          leadingItems={[home]}
           trailingItems={[history, settings]}
           action={{ to: panel.openTo, state: panel.openState, label: t('nav.addExpense') }}
         />
       }
     >
+      <UpdatePrompt />
       {isDemo && (
         <NoticeBanner
           message={t('demo.banner')}

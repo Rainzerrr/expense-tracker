@@ -1,7 +1,6 @@
 export type IconName =
   | 'home'
   | 'stats'
-  | 'trend'
   | 'list'
   | 'tag'
   | 'settings'
@@ -36,7 +35,6 @@ interface IconShape {
 const SHAPES: Record<IconName, IconShape> = {
   home: { paths: ['m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z'] },
   stats: { paths: ['M4 20V10M10 20V4M16 20v-8M22 20H2'] },
-  trend: { paths: ['m3 17 6-6 4 4 8-8M15 7h6v6'] },
   list: { paths: ['M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'] },
   tag: {
     paths: ['M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z'],

@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StayProgressSummary } from '@/app/StayProgressSummary';
 import { useFocusManagerPanel, useNewExpensePanel } from '@/app/panels';
@@ -10,6 +11,9 @@ import {
   useMonthSummary,
 } from '@/domains/analytics/react';
 import { BackupReminder } from '@/domains/backup/react';
+import { BudgetCard, useBudget } from '@/domains/budget/react';
+import { computeBudgetStatus } from '@/domains/budget';
+import { FIXED_CATEGORY_IDS } from '@/domains/categorization';
 import { useCatalog } from '@/domains/categorization/react';
 import { RecentExpenses } from '@/domains/expenses/react';
 import { FocusCards, useFocuses } from '@/domains/focus/react';
@@ -22,6 +26,7 @@ import { CardSection } from '@/shared/ui/molecules/CardSection';
 import './DashboardPage.scss';
 
 const HISTORY_PATH = '/history';
+const SETTINGS_PATH = '/settings';
 
 export function DashboardPage() {
   const { t } = useTranslation('analytics');
@@ -34,6 +39,14 @@ export function DashboardPage() {
   const catalog = useCatalog();
   const { expenses, summary } = useMonthSummary(month, today);
   const stayTotal = useStayTotal(stay);
+  const budget = useBudget();
+  const budgetStatus = useMemo(
+    () =>
+      expenses &&
+      budget &&
+      computeBudgetStatus({ expenses, fixedCategoryIds: FIXED_CATEGORY_IDS, budget }),
+    [expenses, budget],
+  );
 
   return (
     <div className="dashboard-page">
@@ -57,7 +70,7 @@ export function DashboardPage() {
         />
       </div>
 
-      {catalog && expenses && summary && focuses && stayTotal !== undefined && (
+      {catalog && expenses && summary && focuses && budgetStatus && stayTotal !== undefined && (
         <>
           <div className="dashboard-page__summary">
             <SummaryCard
@@ -69,6 +82,10 @@ export function DashboardPage() {
             >
               <StayProgressSummary />
             </SummaryCard>
+          </div>
+
+          <div className="dashboard-page__budget">
+            <BudgetCard status={budgetStatus} manageTo={SETTINGS_PATH} />
           </div>
 
           <CardSection className="dashboard-page__breakdown" title={t('breakdown.title')}>

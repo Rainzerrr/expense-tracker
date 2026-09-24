@@ -2,6 +2,9 @@ import type { CategoryId, SubcategoryId } from '@/domains/categorization';
 import { createTag } from '@/domains/categorization';
 import type { ExpenseInput } from '@/domains/expenses';
 import { addFocus, removeFocus } from '@/domains/focus';
+import { DEFAULT_STAY } from '@/domains/stay';
+import { importStatement, previewStatement } from '@/domains/statements';
+import { initialChoices } from '@/domains/statements';
 import { addExpense, deleteExpense, restoreExpense, updateExpense } from '@/domains/expenses';
 import type { AppServices } from '@/app/bootstrap';
 import { createTestServices } from '@/test/services';
@@ -176,6 +179,47 @@ describe('focus entre appareils', () => {
     await addFocus(mac.focus, { kind: 'category', targetId: 'transport' }, D('20', '11:00'));
     await transfer(iphone, mac, D('21'));
     expect(await names(mac)).toEqual(['transport']);
+  });
+});
+
+describe('relevé bancaire importé sur les deux appareils', () => {
+  const HEADER =
+    'Type,Produit,Date de début,Date de fin,Description,Montant,Frais,Devise,État,Solde';
+  const RELEVE = [
+    HEADER,
+    'Paiement par carte,Valeur actuelle,2026-09-05 12:00:00,2026-09-05 12:00:00,Continente,-20.00,0.00,EUR,TERMINÉ,1',
+  ].join('\n');
+
+  async function importOn(device: AppServices, at: Date) {
+    const preview = await previewStatement(device, RELEVE, DEFAULT_STAY);
+    if (!preview.ok) throw new Error('relevé refusé');
+    await importStatement(device, preview.plan, initialChoices(preview.plan), at);
+  }
+
+  it('ne crée pas de doublon quand l’autre appareil envoie ses données', async () => {
+    await importOn(iphone, D('21'));
+    await importOn(mac, D('21'));
+    await transfer(iphone, mac, D('22'));
+    expect(await visible(mac)).toHaveLength(1);
+    await transfer(mac, iphone, D('22', '12:00'));
+    expect(await visible(iphone)).toHaveLength(1);
+  });
+
+  it('transmet le commerçant et les règles apprises', async () => {
+    await importOn(iphone, D('21'));
+    await iphone.merchantRules.put([
+      {
+        id: 'nobby',
+        categoryId: 'shopping' as never,
+        subcategoryId: null,
+        ignore: false,
+        updatedAt: '2026-09-21T10:00:00.000Z' as never,
+        deletedAt: null,
+      },
+    ]);
+    await transfer(iphone, mac, D('22'));
+    expect((await mac.expenses.findByMonth('2026-09' as never))[0]?.note).toBe('Continente');
+    expect((await mac.merchantRules.list()).map((r) => r.id)).toEqual(['nobby']);
   });
 });
 
