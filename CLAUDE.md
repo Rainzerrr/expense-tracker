@@ -65,6 +65,7 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 - **Deux points d'entrée React** : `backup/react.ts` (léger : rappel, statut) pour le dashboard ; `backup/data.ts` (cartes d'envoi/import/CSV) pour Réglages.
 - **Rappel** : `backupReminderDays` — modifications locales non sauvegardées depuis ≥ 7 jours. Un appareil qui ne fait qu'importer (le Mac) n'est jamais relancé. Jamais en mode démo (envoi et import y sont désactivés pour ne pas mélanger démo et vraies données).
 - **Base v2** : `updatedAt`/`deletedAt` ajoutés au catalogue (migration : date d'époque `EPOCH_INSTANT` pour les données par défaut, donc identiques sur tous les appareils), table `meta` (`lastExportAt`, `lastImportAt`).
+- **Piège Safari déjà rencontré** : `navigator.share` doit partir dans la foulée du clic, sans `await` avant (sinon `NotAllowedError`). `TransferCard` prépare donc le fichier à l'avance (requête vivante Dexie) ; un refus retombe sur le téléchargement.
 - **Non vérifié sur un vrai iPhone** : le menu Partager avec un fichier `.json` (repli automatique vers le téléchargement), et le téléchargement dans la PWA installée. À tester avant de compter dessus.
 - CSV : `;` en séparateur, CRLF, UTF-8 avec BOM (vérifié sur les octets), et neutralisation des formules (`=`, `+`, `-`, `@`).
 

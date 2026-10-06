@@ -52,6 +52,12 @@ async function renderSettings(services?: AppServices) {
 }
 
 const backupOf = async (app: AppServices) => (await createBackup(app.backup)).text;
+/** Les boutons d'envoi attendent que le fichier soit préparé. */
+async function enabledButton(name: string) {
+  const button = screen.getByRole('button', { name });
+  await waitFor(() => expect(button).toBeEnabled());
+  return button;
+}
 const fileInput = () => document.querySelector<HTMLInputElement>('input[type="file"]')!;
 const jsonFile = (text: string, name = 'lisboa.json') =>
   new File([text], name, { type: 'application/json' });
@@ -62,7 +68,7 @@ describe('envoyer vers un autre appareil', () => {
     await addExpense(source, meat);
     const { user } = await renderSettings(source);
 
-    await user.click(screen.getByRole('button', { name: 'Envoyer (AirDrop…)' }));
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
 
     expect(
       await screen.findByText('Fichier téléchargé : lisboa-2026-09-20.json.'),
@@ -82,7 +88,7 @@ describe('envoyer vers un autre appareil', () => {
     await addExpense(source, meat);
     const { user } = await renderSettings(source);
 
-    await user.click(screen.getByRole('button', { name: 'Envoyer (AirDrop…)' }));
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
 
     expect(await screen.findByText('Fichier envoyé.')).toBeInTheDocument();
     expect(shared).toHaveLength(1);
@@ -91,6 +97,43 @@ describe('envoyer vers un autre appareil', () => {
     expect(
       await screen.findByText('Dernier envoi ou téléchargement : 20 sept. 2026.'),
     ).toBeInTheDocument();
+  });
+
+  it('ouvre le menu Partager dans la foulée du clic (exigence de Safari)', async () => {
+    // Safari refuse le partage (NotAllowedError) si une lecture de la base le précède.
+    let duringClick = false;
+    const markClick = () => {
+      duringClick = true;
+      queueMicrotask(() => (duringClick = false));
+    };
+    document.addEventListener('click', markClick, true);
+    const calledDuringClick: boolean[] = [];
+    Object.assign(navigator, {
+      canShare: () => true,
+      share: vi.fn(async () => void calledDuringClick.push(duringClick)),
+    });
+    const source = await createTestServices();
+    await addExpense(source, meat);
+    const { user } = await renderSettings(source);
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
+
+    expect(await screen.findByText('Fichier envoyé.')).toBeInTheDocument();
+    expect(calledDuringClick).toEqual([true]);
+    document.removeEventListener('click', markClick, true);
+  });
+
+  it('retombe sur le téléchargement si le navigateur refuse le partage', async () => {
+    Object.assign(navigator, {
+      canShare: () => true,
+      share: vi.fn(async () => {
+        throw new DOMException('refusé', 'NotAllowedError');
+      }),
+    });
+    const { user } = await renderSettings();
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
+
+    expect(await screen.findByText(/Fichier téléchargé : lisboa-.*\.json\./)).toBeInTheDocument();
+    expect(downloads).toHaveLength(1);
   });
 
   it('ne note rien quand on ferme le menu Partager sans envoyer', async () => {
@@ -102,7 +145,7 @@ describe('envoyer vers un autre appareil', () => {
     });
     const { user, app } = await renderSettings();
 
-    await user.click(screen.getByRole('button', { name: 'Envoyer (AirDrop…)' }));
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
 
     await waitFor(() => expect(navigator.share).toHaveBeenCalled());
     expect(screen.queryByText('Fichier envoyé.')).not.toBeInTheDocument();
@@ -112,7 +155,7 @@ describe('envoyer vers un autre appareil', () => {
 
   it('propose aussi le téléchargement direct', async () => {
     const { user } = await renderSettings();
-    await user.click(screen.getByRole('button', { name: 'Télécharger le fichier' }));
+    await user.click(await enabledButton('Télécharger le fichier'));
     expect(await screen.findByText(/Fichier téléchargé : lisboa-.*\.json\./)).toBeInTheDocument();
   });
 });

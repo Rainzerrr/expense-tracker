@@ -1,3 +1,4 @@
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppServices } from '@/app/AppServices';
@@ -21,18 +22,24 @@ export function TransferCard() {
   const [message, setMessage] = useState<Message>(null);
   const [busy, setBusy] = useState(false);
 
+  // Fichier préparé à l'avance et tenu à jour à chaque modification de la base : Safari n'ouvre
+  // le menu Partager que si l'appel suit directement le clic, sans lecture de la base entre deux.
+  const { createBackup } = actions;
+  const backup = useLiveQuery(() => (isDemo ? null : createBackup()), [isDemo, createBackup]);
+
   const run = async (mode: 'share' | 'download') => {
+    if (!backup) return;
     setBusy(true);
     setMessage(null);
     try {
-      const backup = await actions.createBackup();
       const file = new File([backup.text], backup.fileName, { type: 'application/json' });
 
+      // Aucun `await` avant `shareFile` : il doit partir dans la foulée du clic.
       // Sans menu Partager (certains navigateurs de bureau), on retombe sur un téléchargement.
       const shared =
         mode === 'share' ? await shareFile(file, t('data.transfer.title')) : 'unsupported';
       if (shared === 'cancelled') return;
-      if (shared === 'unsupported') downloadFile(file);
+      if (shared === 'unsupported' || shared === 'blocked') downloadFile(file);
 
       await actions.recordExport();
       setMessage({
@@ -57,10 +64,14 @@ export function TransferCard() {
       <p className="transfer-card__text">{t('data.transfer.text')}</p>
 
       <div className="transfer-card__actions">
-        <Button disabled={isDemo || busy} onClick={() => void run('share')}>
+        <Button disabled={isDemo || busy || !backup} onClick={() => void run('share')}>
           {t('data.transfer.share')}
         </Button>
-        <Button variant="secondary" disabled={isDemo || busy} onClick={() => void run('download')}>
+        <Button
+          variant="secondary"
+          disabled={isDemo || busy || !backup}
+          onClick={() => void run('download')}
+        >
           {t('data.transfer.download')}
         </Button>
       </div>

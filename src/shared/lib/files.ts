@@ -1,9 +1,12 @@
-export type ShareResult = 'shared' | 'cancelled' | 'unsupported';
+export type ShareResult = 'shared' | 'cancelled' | 'unsupported' | 'blocked';
 
 /**
  * Ouvre le menu Partager du système (AirDrop, Messages, Mail, Enregistrer dans Fichiers…).
  * `unsupported` : ce navigateur ne sait pas partager un fichier, l'appelant doit le télécharger.
  * Fermer le menu sans rien choisir n'est pas une erreur (`cancelled`).
+ *
+ * Safari n'ouvre le menu que si l'appel suit directement le clic : le fichier doit être prêt
+ * avant, aucun `await` (lecture de la base…) ne doit précéder cet appel. Sinon : `blocked`.
  */
 export async function shareFile(file: File, title: string): Promise<ShareResult> {
   if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') {
@@ -19,6 +22,7 @@ export async function shareFile(file: File, title: string): Promise<ShareResult>
     return 'shared';
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') return 'cancelled';
+    if (error instanceof DOMException && error.name === 'NotAllowedError') return 'blocked';
     throw error;
   }
 }
