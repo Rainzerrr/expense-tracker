@@ -1,8 +1,11 @@
 import type { IsoInstant } from '@/shared/lib/time';
 import type { BackupData } from './backupFile';
 
-/** Clés des petits réglages techniques. */
-export type BackupMetaKey = 'lastExportAt' | 'lastImportAt';
+/**
+ * Clés des petits réglages techniques. `lastSyncAt` : dernière synchronisation réussie ;
+ * `syncedThrough` : modification la plus récente que le serveur a reçue (voir le contexte `sync`).
+ */
+export type BackupMetaKey = 'lastExportAt' | 'lastImportAt' | 'lastSyncAt' | 'syncedThrough';
 
 export interface BackupRepository {
   /** Toutes les données, suppressions logiques comprises. */

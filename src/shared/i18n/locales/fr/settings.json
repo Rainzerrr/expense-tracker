@@ -4,7 +4,7 @@
   },
   "data": {
     "title": "Mes données",
-    "intro": "Tes dépenses sont enregistrées uniquement sur cet appareil. Pour les retrouver sur ton Mac, envoie-les par AirDrop.",
+    "intro": "Tes dépenses sont enregistrées sur chaque appareil. La synchronisation les fait passer de l'un à l'autre toute seule ; le fichier de sauvegarde reste là en secours.",
     "demoNotice": "Indisponible en mode démo : ces données sont fictives.",
     "status": {
       "never": "Aucune sauvegarde pour l'instant.",
@@ -12,8 +12,8 @@
       "lastImport": "Dernier import : {{date}}."
     },
     "transfer": {
-      "title": "Envoyer vers un autre appareil",
-      "text": "Crée un fichier avec toutes tes dépenses et envoie-le par AirDrop, Messages ou Mail. Sur le Mac, ouvre-le dans Réglages.",
+      "title": "Fichier de sauvegarde",
+      "text": "Crée un fichier avec toutes tes dépenses (à garder en lieu sûr, ou à ouvrir sur un autre appareil dans Réglages → Recevoir).",
       "share": "Envoyer (AirDrop…)",
       "download": "Télécharger le fichier",
       "downloaded": "Fichier téléchargé : {{name}}.",
@@ -147,5 +147,49 @@
     "save": "Enregistrer",
     "saved": "Budget enregistré.",
     "error": "Vérifie les montants : ils doivent être des nombres positifs."
+  },
+  "sync": {
+    "title": "Synchronisation",
+    "intro": "Relie ton iPhone et ton Mac : ce que tu saisis sur l'un apparaît sur l'autre, tout seul, dès que les deux ont du réseau. Rien n'est jamais écrasé : comme pour un import, la version la plus récente de chaque dépense l'emporte.",
+    "create": {
+      "title": "Premier appareil",
+      "text": "Crée un code ici, puis saisis-le sur ton autre appareil.",
+      "action": "Créer un code"
+    },
+    "join": {
+      "title": "J'ai déjà un code",
+      "label": "Code affiché dans les Réglages de l'autre appareil",
+      "action": "Relier cet appareil"
+    },
+    "now": "Synchroniser maintenant",
+    "status": {
+      "syncing": "Synchronisation…",
+      "lastSync": "Synchronisé le {{date}}.",
+      "never": "Pas encore synchronisé.",
+      "received": "Reçu de l'autre appareil — nouvelles : {{added}} · modifiées : {{updated}} · supprimées : {{deleted}}"
+    },
+    "code": {
+      "title": "Code de synchronisation",
+      "text": "Saisis ce code sur ton autre appareil (Réglages → Synchronisation → J'ai déjà un code). Garde-le pour toi : il donne accès à tes dépenses.",
+      "copy": "Copier le code",
+      "copied": "Code copié"
+    },
+    "unlink": {
+      "action": "Détacher cet appareil",
+      "confirm": "Oui, détacher",
+      "text": "Les dépenses restent sur cet appareil, mais il ne recevra plus celles des autres. Tu pourras le relier à nouveau avec le code."
+    },
+    "errors": {
+      "invalidCode": "Ce code n'est pas valide : il fait 28 caractères, lettres et chiffres.",
+      "unknownCode": "Aucune donnée en ligne pour ce code. Vérifie-le : il est affiché dans les Réglages de l'autre appareil.",
+      "offline": "Pas de connexion. La synchronisation reprendra toute seule au retour du réseau.",
+      "unavailable": "Le serveur de synchronisation ne répond pas. Réessaie plus tard ; tes données restent sur l'appareil.",
+      "unauthorized": "Le serveur a refusé ce code.",
+      "tooManyRequests": "Trop de tentatives d'affilée. Réessaie dans une minute.",
+      "invalidRemote": "Les données en ligne sont illisibles. Rien n'a été modifié ici.",
+      "newerVersion": "L'autre appareil utilise une version plus récente de l'application : mets celle-ci à jour.",
+      "conflict": "L'autre appareil synchronisait en même temps. Réessaie.",
+      "unknown": "La synchronisation a échoué. Réessaie."
+    }
   }
 }

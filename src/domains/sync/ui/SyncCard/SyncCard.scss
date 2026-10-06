@@ -1,0 +1,89 @@
+@use '@/shared/styles/abstracts' as *;
+
+.sync-card {
+  display: flex;
+  flex-direction: column;
+  gap: space(4);
+  align-items: flex-start;
+
+  &__text,
+  &__status {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+
+  &__status:empty {
+    display: none;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: space(3);
+    align-items: flex-start;
+    align-self: stretch;
+    padding-top: space(4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  &__subtitle {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: space(2);
+    align-self: stretch;
+  }
+
+  &__label {
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &__input {
+    min-height: $touch-target;
+    padding-inline: space(4);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    outline: none;
+    background: var(--color-ground);
+    color: var(--color-ink);
+
+    // 16 px minimum : en dessous, iOS zoome la page au focus.
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+
+    &:focus {
+      border-color: var(--color-accent);
+    }
+  }
+
+  &__code {
+    padding: space(3) space(4);
+    border-radius: var(--radius-md);
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    user-select: all;
+    overflow-wrap: anywhere;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: space(3);
+  }
+
+  &__error {
+    color: var(--color-danger);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}

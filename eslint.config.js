@@ -92,7 +92,7 @@ export default tseslint.config(
   },
   {
     // Scripts Node (mesure du poids du bundle…) : pas de navigateur, pas de règles d'interface.
-    files: ['*.config.{js,ts}', 'scripts/**/*.mjs'],
+    files: ['*.config.{js,ts}', 'scripts/**/*.mjs', 'api/**/*.ts'],
     languageOptions: { globals: globals.node },
     rules: { 'no-restricted-syntax': 'off' },
   },

@@ -1,6 +1,7 @@
 import { format, parseISO } from 'date-fns';
 import { fr } from 'date-fns/locale/fr';
-import type { LocalDate, YearMonth } from '@/shared/lib/time';
+import { todayInLisbon } from '@/shared/lib/time';
+import type { IsoInstant, LocalDate, YearMonth } from '@/shared/lib/time';
 
 const LOCALE = 'fr-FR';
 
@@ -41,6 +42,18 @@ export function formatDayMonth(date: LocalDate): string {
 /** « 1 sept. 2026 » */
 export function formatDayMonthYear(date: LocalDate): string {
   return format(parseISO(date), 'd MMM yyyy', { locale: fr });
+}
+
+const lisbonTimeFormat = new Intl.DateTimeFormat(LOCALE, {
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'Europe/Lisbon',
+});
+
+/** « 6 oct. à 14:32 », à l'heure de Lisbonne. */
+export function formatDateTime(instant: IsoInstant): string {
+  const moment = new Date(instant);
+  return `${formatDayMonth(todayInLisbon(moment))} à ${lisbonTimeFormat.format(moment)}`;
 }
 
 /** « dim. 20 sept. » */

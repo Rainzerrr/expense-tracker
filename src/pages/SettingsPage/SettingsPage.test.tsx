@@ -8,7 +8,8 @@ import { parseBackup } from '@/domains/backup';
 import { createBackup } from '@/domains/backup';
 import type { CategoryId, SubcategoryId } from '@/domains/categorization';
 import { addExpense } from '@/domains/expenses';
-import { createTestServices } from '@/test/services';
+import { formatSyncCode } from '@/domains/sync';
+import { createTestServices, memorySyncServer } from '@/test/services';
 
 const meat = {
   amount: 1240,
@@ -176,6 +177,85 @@ describe('envoyer vers un autre appareil', () => {
     const { user } = await renderSettings();
     await user.click(await enabledButton('Télécharger le fichier'));
     expect(await screen.findByText(/Fichier téléchargé : lisboa-.*\.json\./)).toBeInTheDocument();
+  });
+});
+
+describe('synchronisation', () => {
+  const codeOnScreen = () => document.querySelector('.sync-card__code')?.textContent ?? '';
+
+  it('crée un code sur le premier appareil et envoie aussitôt ses dépenses', async () => {
+    const server = memorySyncServer();
+    const iphone = await createTestServices({ syncServer: server });
+    await addExpense(iphone, meat);
+    const { user } = await renderSettings(iphone);
+
+    await user.click(await screen.findByRole('button', { name: 'Créer un code' }));
+
+    expect(await screen.findByText('Synchronisé le 20 sept. à 13:00.')).toBeInTheDocument();
+    expect(codeOnScreen()).toMatch(/^([0-9A-Z]{4} ){6}[0-9A-Z]{4}$/);
+    const code = await iphone.syncSettings.getCode();
+    expect(code && formatSyncCode(code)).toBe(codeOnScreen());
+  });
+
+  it('relie un second appareil avec ce code, et reçoit les dépenses', async () => {
+    const server = memorySyncServer();
+    const iphone = await createTestServices({ syncServer: server });
+    await addExpense(iphone, meat);
+    const { syncNow } = await import('@/domains/sync/application/syncNow');
+    const { generateSyncCode } = await import('@/domains/sync');
+    const code = generateSyncCode();
+    await syncNow({ backup: iphone.backup, server, code, now: new Date() });
+
+    const mac = await createTestServices({ syncServer: server });
+    const { user } = await renderSettings(mac);
+    await user.type(
+      await screen.findByLabelText("Code affiché dans les Réglages de l'autre appareil"),
+      formatSyncCode(code).toLowerCase(),
+    );
+    await user.click(screen.getByRole('button', { name: 'Relier cet appareil' }));
+
+    expect(
+      await screen.findByText(/Reçu de l'autre appareil — nouvelles : 1 · modifiées : 0/),
+    ).toBeInTheDocument();
+    expect(await mac.syncSettings.getCode()).toBe(code);
+  });
+
+  it('refuse un code mal recopié au lieu de créer un coffre vide', async () => {
+    const mac = await createTestServices({ syncServer: memorySyncServer() });
+    const { user } = await renderSettings(mac);
+    const field = await screen.findByLabelText(
+      "Code affiché dans les Réglages de l'autre appareil",
+    );
+
+    await user.type(field, 'ABCD');
+    await user.click(screen.getByRole('button', { name: 'Relier cet appareil' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/fait 28 caractères/);
+
+    await user.clear(field);
+    await user.type(field, '0000 1111 2222 3333 4444 5555 6666');
+    await user.click(screen.getByRole('button', { name: 'Relier cet appareil' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent(/Aucune donnée en ligne/);
+    expect(await mac.syncSettings.getCode()).toBeNull();
+  });
+
+  it('détache l’appareil sans toucher aux dépenses', async () => {
+    const iphone = await createTestServices({ syncServer: memorySyncServer() });
+    await addExpense(iphone, meat);
+    const { user } = await renderSettings(iphone);
+    await user.click(await screen.findByRole('button', { name: 'Créer un code' }));
+    await screen.findByText(/Synchronisé le/);
+
+    await user.click(screen.getByRole('button', { name: 'Détacher cet appareil' }));
+    await user.click(screen.getByRole('button', { name: 'Oui, détacher' }));
+
+    expect(await screen.findByRole('button', { name: 'Créer un code' })).toBeInTheDocument();
+    expect(await iphone.syncSettings.getCode()).toBeNull();
+    expect((await iphone.backup.readAll()).expenses).toHaveLength(1);
+  });
+
+  it('n’est pas proposée en mode démo', async () => {
+    await renderSettings(await createTestServices({ search: '?demo=1' }));
+    expect(screen.queryByRole('button', { name: 'Créer un code' })).not.toBeInTheDocument();
   });
 });
 

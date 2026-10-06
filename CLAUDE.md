@@ -4,11 +4,11 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 
 ## Décisions qui remplacent le guide
 
-- **Aucun service externe.** Pas de Cloudflare, pas de serveur, pas de compte, pas de code secret. Les sections 10.2 à 10.4 du guide (sync, protocole, code secret) et le contexte `sync` ne sont pas à faire.
-- **Pas de synchronisation automatique.** Chaque appareil a sa propre base IndexedDB. **L'iPhone est l'appareil principal (saisie), le Mac sert à consulter.** Le transfert se fait par fichier (AirDrop) : Réglages → « Envoyer » sur l'iPhone, « Recevoir » sur le Mac (fusion, jamais d'écrasement). Une base partagée pourra venir plus tard si la friction gêne ; le modèle (`updatedAt`/`deletedAt`/ULID partout) est déjà prêt pour ça. Les maquettes montrent « Synchronisé avec l'iPhone » et une liste d'appareils : à retirer ou remplacer.
+- **Un seul service externe : Upstash Redis via Vercel** (décidé le 6 oct. 2026, le transfert AirDrop par fichier ne marchait pas depuis un navigateur de bureau). Pas de Cloudflare, pas de compte : un **code secret** relie les appareils (guide 10.4). Voir « Synchronisation (contexte `sync`) ».
+- **Local first** : chaque appareil garde sa propre base IndexedDB, l'app marche hors ligne ; la synchro passe par-dessus. **L'iPhone est l'appareil principal (saisie), le Mac sert surtout à consulter.** Le fichier de sauvegarde (Envoyer / Recevoir) reste en secours.
 - **Pas de thème sombre.** Uniquement le thème clair (`color-scheme: light`).
 - **Mode démo** : l'URL avec `?demo=1` charge un jeu de données de test dans une base IndexedDB **séparée** de la vraie (nom de base distinct), pour ne jamais mélanger les deux. Disponible aussi en production, car c'est voulu par l'utilisateur.
-- **Hébergement : Vercel** (site statique uniquement, pas de fonctions serveur). Prévoir un `vercel.json` avec une réécriture de toutes les routes vers `/index.html` (routage côté client) à l'étape 7.
+- **Hébergement : Vercel** (site statique + une seule fonction, `api/sync.ts`). Prévoir un `vercel.json` avec une réécriture de toutes les routes vers `/index.html` (routage côté client) à l'étape 7.
 - **Navigation** : « Stats » reste une page vide pour l'instant (écran non conçu). Pas d'entrée « Catégories » dans la barre latérale : la gestion des catégories, sous-catégories et tags sera dans Réglages.
 - Catégorie fixe de la projection : Logement, identifiée par sa clé système `housing`, non configurable.
 
@@ -56,6 +56,16 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 - `ExpenseForm` sert à créer et à modifier (`mode`, `defaultValues`, `onDelete`). En modification sur mobile, le pavé numérique est fermé tant qu'on ne touche pas le montant.
 - Tests : jsdom ne fournit pas `hasPointerCapture` (Radix) : polyfill dans `src/test/setup.ts`. Dans les tests, attendre une **ligne de dépense** (pas `listitem` : la navigation en contient déjà).
 
+## Synchronisation (contexte `sync`)
+
+- **Protocole volontairement plus simple que le guide 10.3** : le serveur garde, par coffre, **le fichier de sauvegarde complet** (format `lisboa-expenses`) et un numéro de révision. Il ne fusionne rien. `syncNow` : `GET` → fusion locale avec `mergeBackup` (la même que l'import) → si le coffre n'a pas tout (`mergeBackup(distant, local)` non vide), `PUT` avec `X-Base-Rev` ; **409** si un autre appareil a écrit entre-temps → on recommence (3 fois max).
+- **`api/sync.ts`** : autonome (aucun import, sinon piège ESM sur Vercel), utilisé tel quel par Vercel, par le serveur de dev (plugin `devSyncApi` dans `vite.config.ts`, coffres **en mémoire**, perdus au redémarrage) et par les tests (`memorySyncServer()` dans `src/test/services.ts` : vrai handler + vrai client HTTP). Upstash par son API REST (`fetch`, pas de SDK) ; comparaison-écriture atomique en Lua (`EVAL`). Variables `KV_REST_API_URL`/`KV_REST_API_TOKEN` (injectées par l'intégration Vercel) ou `UPSTASH_REDIS_REST_*`. 503 si absentes.
+- **Code** : 28 caractères base32 Crockford (140 bits), dans la table `meta` (clé `syncCode`, ne voyage pas dans les sauvegardes). Le serveur n'en garde que l'empreinte SHA-256. 60 requêtes/min par IP. « Relier » vérifie que le coffre existe (un code mal recopié créerait sinon un coffre vide en silence).
+- **Déclencheurs** (`useAutoSync`, monté dans `RootLayout`) : démarrage, retour au premier plan, retour du réseau, 3 s après une modification. « En attente » = `oldestChangeSince(syncedThrough)`, où `syncedThrough` est la modification la plus récente reçue par le serveur (pas l'heure de synchro : insensible aux décalages d'horloge). Jamais en mode démo.
+- **Poids** : `syncStatus.ts` est chargé au démarrage et ne doit importer **aucune valeur** de `@/domains/backup` (son index embarque Zod, +27 Ko mesurés). Tout ce qui fusionne est dans `syncNow.ts`, chargé à la demande.
+- Le rappel de sauvegarde tient compte de `syncedThrough` : un appareil synchronisé n'est plus relancé.
+- **À vérifier une fois en ligne** : `curl -i https://<domaine>/api/sync` doit répondre **401** (pas 404 ni la page HTML).
+
 ## Sauvegarde et transfert (contexte `backup`)
 
 - **Format** `lisboa-expenses` v1 (`domain/backupFile.ts`) : `{ format, version, exportedAt, data: { expenses, categories, subcategories, tags } }`. Il contient **aussi les éléments supprimés logiquement** : c'est ce qui propage les suppressions. Un fichier de version supérieure est refusé.
@@ -71,7 +81,7 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 
 ## Budget de poids
 
-`npm run size` construit puis pèse le JS réellement téléchargé par écran (entrée + imports statiques + écran) et **échoue au-delà de 170 Ko gzip**. Ne pas se fier à une estimation à l'œil : le découpage en chunks change à chaque ajout. Dernière mesure : dashboard 157, historique 151, réglages 150. Leviers déjà utilisés : Zod chargé à l'import, toast Radix chargé à la première suppression, jeu de démo chargé en mode démo seulement (les panneaux de saisie/modification sont chargés à la demande, hors budget).
+`npm run size` construit puis pèse le JS réellement téléchargé par écran (entrée + imports statiques + écran) et **échoue au-delà de 170 Ko gzip**. Ne pas se fier à une estimation à l'œil : le découpage en chunks change à chaque ajout. Dernière mesure : dashboard 161, historique 155, réglages 162 (démarrage 149). Leviers déjà utilisés : Zod chargé à l'import, toast Radix chargé à la première suppression, jeu de démo chargé en mode démo seulement (les panneaux de saisie/modification sont chargés à la demande, hors budget).
 
 ## Focus (contexte `focus`, étape 5)
 
@@ -132,4 +142,5 @@ PWA mobile first (iPhone) + site web (Mac). Référence technique : `docs/GUIDE-
 - [x] 4. Historique (liste, recherche, filtres, modification, suppression + annulation)
 - [x] 5. Focus (cartes du dashboard, page de détail, gestion : épingler / retirer / réordonner)
 - [~] 6. Réglages : **export/import/CSV/rappel faits** (fait avant l'étape 5) ; reste : dates du séjour, gestion des catégories/tags, à propos
+- [x] Synchronisation (guide 10.2–10.4, protocole simplifié) : faite et vérifiée en local à deux origines ; reste à brancher Upstash sur Vercel et tester iPhone ↔ Mac
 - [~] 7. PWA : **code fait et vérifié hors ligne** (service worker, manifest, icônes, mise à jour, stockage persistant, `vercel.json`) ; reste : mise en ligne sur Vercel et test sur un vrai iPhone

@@ -10,6 +10,8 @@ import { DexieFocusRepository } from '@/domains/focus/infrastructure';
 import type { ExpenseRepository } from '@/domains/expenses';
 import { DexieExpenseRepository } from '@/domains/expenses/infrastructure';
 import type { BackupRepository } from '@/domains/backup';
+import type { SyncServer, SyncSettingsRepository } from '@/domains/sync';
+import { DexieSyncSettingsRepository, HttpSyncServer } from '@/domains/sync/infrastructure';
 import { DexieBackupRepository } from '@/domains/backup/infrastructure';
 import { AppDatabase, DATABASE_NAME, DEMO_DATABASE_NAME } from '@/shared/infrastructure/database';
 import { resolveDemoMode } from '@/shared/infrastructure/demoMode';
@@ -24,6 +26,8 @@ export interface AppServices {
   focus: FocusRepository;
   merchantRules: MerchantRuleRepository;
   budget: BudgetRepository;
+  syncSettings: SyncSettingsRepository;
+  syncServer: SyncServer;
   isDemo: boolean;
   /** Horloge injectable : les tests figent la date. */
   now: () => Date;
@@ -36,6 +40,8 @@ export interface BootstrapOptions {
   databaseName?: string;
   /** Date fixe pour les tests. Par défaut : l'heure réelle. */
   now?: Date;
+  /** Pour les tests : un serveur de synchronisation en mémoire. Par défaut : `/api/sync`. */
+  syncServer?: SyncServer;
 }
 
 export const databaseNameFor = (isDemo: boolean) => (isDemo ? DEMO_DATABASE_NAME : DATABASE_NAME);
@@ -46,6 +52,7 @@ export async function bootstrap({
   storage,
   databaseName,
   now,
+  syncServer,
 }: BootstrapOptions): Promise<AppServices> {
   const isDemo = resolveDemoMode(search, storage);
   const db = new AppDatabase(databaseName ?? databaseNameFor(isDemo));
@@ -72,6 +79,8 @@ export async function bootstrap({
     focus,
     merchantRules,
     budget,
+    syncSettings: new DexieSyncSettingsRepository(db),
+    syncServer: syncServer ?? new HttpSyncServer(),
     isDemo,
     now: () => now ?? new Date(),
   };

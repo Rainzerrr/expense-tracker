@@ -1,13 +1,48 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import { fileURLToPath, URL } from 'node:url';
 import react from '@vitejs/plugin-react';
+import type { Plugin } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { defineConfig } from 'vitest/config';
+import { createSyncHandler, memoryVaultStore } from './api/sync.ts';
 
 const COLOR = '#f6f5f1';
+
+/**
+ * `/api/sync` en local (`npm run dev`, `dev:lan`, `vite preview`) : la même fonction que sur
+ * Vercel, avec des coffres en mémoire (perdus à l'arrêt du serveur).
+ */
+function devSyncApi(): Plugin {
+  const handle = createSyncHandler(memoryVaultStore());
+  const middleware = async (req: IncomingMessage, res: ServerResponse) => {
+    const chunks: Buffer[] = [];
+    for await (const chunk of req) chunks.push(chunk as Buffer);
+    const headers = new Headers();
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (typeof value === 'string') headers.set(key, value);
+    }
+    const response = await handle(
+      new Request(`http://localhost${req.url ?? '/'}`, {
+        method: req.method,
+        headers,
+        body: req.method === 'GET' || req.method === 'HEAD' ? undefined : Buffer.concat(chunks),
+      }),
+    );
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+    res.end(Buffer.from(await response.arrayBuffer()));
+  };
+  return {
+    name: 'dev-sync-api',
+    configureServer: (server) => void server.middlewares.use('/api/sync', middleware),
+    configurePreviewServer: (server) => void server.middlewares.use('/api/sync', middleware),
+  };
+}
 
 export default defineConfig({
   plugins: [
     react(),
+    devSyncApi(),
     VitePWA({
       // « prompt » : quand une nouvelle version est prête, l'utilisateur choisit le moment de recharger
       // (jamais de rechargement surprise pendant une saisie).
@@ -52,6 +87,8 @@ export default defineConfig({
         globIgnores: ['**/*-vietnamese-*.woff2'],
         // Toute navigation hors ligne (/history, /focus/…, ?demo=1) retombe sur l'application.
         navigateFallback: '/index.html',
+        // L'API de synchronisation n'est jamais servie par le cache ni remplacée par l'application.
+        navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
       },
     }),

@@ -1,5 +1,6 @@
-import type { LocalDate, YearMonth } from '@/shared/lib/time';
+import type { IsoInstant, LocalDate, YearMonth } from '@/shared/lib/time';
 import {
+  formatDateTime,
   formatDayMonth,
   formatDayMonthYear,
   formatWeekdayDayMonth,
@@ -45,6 +46,11 @@ describe('formats de date', () => {
     expect(formatDayMonth('2026-09-17' as LocalDate)).toBe('17 sept.');
     expect(formatDayMonthYear('2027-01-31' as LocalDate)).toBe('31 janv. 2027');
     expect(formatDayMonthYear('2026-09-01' as LocalDate)).toBe('1 sept. 2026');
+  });
+
+  it('donne la date et l’heure de Lisbonne (heure d’été comprise)', () => {
+    expect(formatDateTime('2026-10-06T13:32:00.000Z' as IsoInstant)).toBe('6 oct. à 14:32');
+    expect(formatDateTime('2026-09-20T23:30:00.000Z' as IsoInstant)).toBe('21 sept. à 00:30');
   });
 
   it('ajoute le jour de la semaine pour les en-têtes de l’historique', () => {

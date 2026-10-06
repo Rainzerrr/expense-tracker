@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
+import { useAutoSync } from '@/domains/sync/react';
 import { NoticeBanner } from '@/shared/ui/molecules/NoticeBanner';
 import type { NavItem } from '@/shared/ui/molecules/NavItemLink';
 import { BottomNav } from '@/shared/ui/organisms/BottomNav';
@@ -38,6 +39,7 @@ export function RootLayout() {
   const focusPanel = useFocusManagerPanel();
   const toast = useUndoToast((state) => state.toast);
   const dismissToast = useUndoToast((state) => state.dismiss);
+  useAutoSync();
 
   const home: NavItem = { to: '/', label: t('nav.home'), icon: 'home' };
   const history: NavItem = { to: '/history', label: t('nav.history'), icon: 'list' };
