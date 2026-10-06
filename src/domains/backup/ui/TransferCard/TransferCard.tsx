@@ -47,7 +47,9 @@ export function TransferCard() {
         text:
           shared === 'shared'
             ? t('data.transfer.shared')
-            : t('data.transfer.downloaded', { name: backup.fileName }),
+            : mode === 'share'
+              ? t('data.transfer.shareUnavailable', { name: backup.fileName })
+              : t('data.transfer.downloaded', { name: backup.fileName }),
       });
     } catch (error) {
       console.error(error);

@@ -18,6 +18,7 @@
       "download": "Télécharger le fichier",
       "downloaded": "Fichier téléchargé : {{name}}.",
       "shared": "Fichier envoyé.",
+      "shareUnavailable": "Ce navigateur n'ouvre pas le menu Partager (AirDrop) : le fichier {{name}} a été téléchargé à la place. Envoie-le depuis le Finder (clic droit → Partager → AirDrop), ou utilise Safari.",
       "error": "Le fichier n'a pas pu être créé. Réessaie."
     },
     "receive": {

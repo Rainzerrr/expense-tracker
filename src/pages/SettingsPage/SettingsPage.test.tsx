@@ -71,7 +71,7 @@ describe('envoyer vers un autre appareil', () => {
     await user.click(await enabledButton('Envoyer (AirDrop…)'));
 
     expect(
-      await screen.findByText('Fichier téléchargé : lisboa-2026-09-20.json.'),
+      await screen.findByText(/le fichier lisboa-2026-09-20\.json a été téléchargé à la place/),
     ).toBeInTheDocument();
     expect(downloads).toHaveLength(1);
     const parsed = parseBackup(await downloads[0]!.text());
@@ -132,8 +132,27 @@ describe('envoyer vers un autre appareil', () => {
     const { user } = await renderSettings();
     await user.click(await enabledButton('Envoyer (AirDrop…)'));
 
-    expect(await screen.findByText(/Fichier téléchargé : lisboa-.*\.json\./)).toBeInTheDocument();
+    expect(await screen.findByText(/a été téléchargé à la place/)).toBeInTheDocument();
     expect(downloads).toHaveLength(1);
+  });
+
+  it('partage en .txt quand le navigateur refuse l’extension .json (Chrome)', async () => {
+    const shared: File[] = [];
+    Object.assign(navigator, {
+      canShare: ({ files }: { files: File[] }) => files.every((file) => file.name.endsWith('.txt')),
+      share: vi.fn(async ({ files }: { files: File[] }) => void shared.push(...files)),
+    });
+    const source = await createTestServices();
+    await addExpense(source, meat);
+    const { user } = await renderSettings(source);
+
+    await user.click(await enabledButton('Envoyer (AirDrop…)'));
+
+    expect(await screen.findByText('Fichier envoyé.')).toBeInTheDocument();
+    expect(shared[0]?.name).toBe('lisboa-2026-09-20.txt');
+    const parsed = parseBackup(await shared[0]!.text());
+    expect(parsed.ok && parsed.file.data.expenses).toHaveLength(1);
+    expect(downloads).toHaveLength(0);
   });
 
   it('ne note rien quand on ferme le menu Partager sans envoyer', async () => {

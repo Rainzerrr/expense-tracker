@@ -68,7 +68,7 @@ export function ImportCard() {
       <FileDropZone
         label={t('data.receive.choose')}
         hint={t('data.receive.drop')}
-        accept=".json,application/json,text/plain"
+        accept=".json,.txt,application/json,text/plain"
         disabled={isDemo || state.step === 'reading'}
         onFile={(file) => void read(file)}
       />

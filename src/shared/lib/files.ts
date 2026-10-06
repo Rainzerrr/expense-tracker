@@ -12,8 +12,14 @@ export async function shareFile(file: File, title: string): Promise<ShareResult>
   if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') {
     return 'unsupported';
   }
-  // Certains navigateurs n'acceptent pas `application/json` dans le menu Partager : on retente en texte.
-  const candidates = [file, new File([file], file.name, { type: 'text/plain' })];
+  // Chrome n'accepte dans le menu Partager qu'une liste fermée de types ET d'extensions (pas
+  // `.json`) : on retente en texte, puis sous le même contenu nommé `.txt`.
+  const asText = file.name.replace(/\.[^.]+$/, '') + '.txt';
+  const candidates = [
+    file,
+    new File([file], file.name, { type: 'text/plain' }),
+    new File([file], asText, { type: 'text/plain' }),
+  ];
   const shareable = candidates.find((candidate) => navigator.canShare({ files: [candidate] }));
   if (!shareable) return 'unsupported';
 
